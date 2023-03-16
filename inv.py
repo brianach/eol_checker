@@ -13,8 +13,11 @@ CREDS = Credentials.from_service_account_file('credentials.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("hw_inventory")
+HARDWARE = SHEET.worksheet("hardware")
 
+HARDWARE.batch_clear(["A2:H60"])
 inv_heads = SHEET.worksheet("hardware").row_values(1)
+
 USERS = 50  # notional number of employees
 inventory = []
 
