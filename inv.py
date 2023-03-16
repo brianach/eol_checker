@@ -1,7 +1,7 @@
 import gspread
 import random
 from google.oauth2.service_account import Credentials
-from datetime import timedelta, date, datetime
+from datetime import timedelta, datetime
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -23,8 +23,9 @@ inventory = []
 
 def make_inv_list():
 
-    for y in range(4, -1, -1):
+    for y in range(0, -1, -1):
 
+        datehr = []
         userid = []
         laptop = []
         screen = []
@@ -37,16 +38,22 @@ def make_inv_list():
         for d in range(1,1+USERS//5):
             rand_days = random.randrange(1,365)
             sdate = datetime(2022, 12, 30) - timedelta((365*(y)+rand_days))
-            #userid.append(inv_heads[d].capitalize() + str(d).zfill(3)+str(int(sdate.strftime("%d%m%Y"))))
-            userid.append(inv_heads[0][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            laptop.append(inv_heads[1][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            screen.append(inv_heads[2][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            dockst.append(inv_heads[3][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            keybrd.append(inv_heads[4][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            mouses.append(inv_heads[5][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            phones.append(inv_heads[6][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
-            hiredt.append(sdate.strftime("%d%m%Y"))
-        print(f"{userid}\n {laptop}\n {screen}\n {dockst} \n {keybrd}\n {mouses}\n {phones}\n {hiredt}")
+            datehr.append(sdate.strftime("%d%m%Y"))
+            hiredt = sorted(datehr, key=lambda hired: (hired[2:4],hired[0:2]))
+        d = 0
+
+        for hired in hiredt:
+
+            d += 1        
+            userid.append(inv_heads[0][0].capitalize() + str(d).zfill(3) + hired)
+            laptop.append(inv_heads[1][0].capitalize() + str(d).zfill(3) + hired)
+            screen.append(inv_heads[2][0].capitalize() + str(d).zfill(3) + hired)
+            dockst.append(inv_heads[3][0].capitalize() + str(d).zfill(3) + hired)
+            keybrd.append(inv_heads[4][0].capitalize() + str(d).zfill(3) + hired)
+            mouses.append(inv_heads[5][0].capitalize() + str(d).zfill(3) + hired)
+            phones.append(inv_heads[6][0].capitalize() + str(d).zfill(3) + hired)
+        
+        print(f"{userid}\n{laptop}\n{screen}\n{dockst}\n{keybrd}\n{mouses}\n{phones}\n{hiredt}")
 
 
 make_inv_list()
