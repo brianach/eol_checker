@@ -24,38 +24,30 @@ def make_inv_list():
     Function to generate inventory of data entered using random ordered dating
     """
 
-    for y in range(4, -1, -1):
+    for y_r in range(4, -1, -1):
 
-        datehr = []
-        userid = []
-        laptop = []
-        screen = []
-        dockst = []
-        keybrd = []
-        mouses = []
-        phones = []
-        hiredt = []
+        dhr, usr, lap, scrn, dok, key, mou, phn, hir = ([] for l_i in range(9))
 
         for d_n in range(1, 1+USERS//5):
             rand_days = random.randrange(1, 365)
-            sdate = datetime(2022, 12, 30) - timedelta((365*(y)+rand_days))
-            datehr.append(sdate.strftime("%d%m%Y"))
-            hiredt = sorted(datehr, key=lambda hired: (hired[2:4], hired[0:2]))
+            sdate = datetime(2022, 12, 30) - timedelta((365*(y_r)+rand_days))
+            dhr.append(sdate.strftime("%d%m%Y"))
+            hir = sorted(dhr, key=lambda hird: (hird[2:4], hird[0:2]))
         d_n = 0
 
-        for hired in hiredt:
+        for hird in hir:
 
             d_n += 1
-            userid.append(inv_heads[0][0].capitalize()+str(d_n).zfill(3)+hired)
-            laptop.append(inv_heads[1][0].capitalize()+str(d_n).zfill(3)+hired)
-            screen.append(inv_heads[2][0].capitalize()+str(d_n).zfill(3)+hired)
-            dockst.append(inv_heads[3][0].capitalize()+str(d_n).zfill(3)+hired)
-            keybrd.append(inv_heads[4][0].capitalize()+str(d_n).zfill(3)+hired)
-            mouses.append(inv_heads[5][0].capitalize()+str(d_n).zfill(3)+hired)
-            phones.append(inv_heads[6][0].capitalize()+str(d_n).zfill(3)+hired)
+            usr.append(inv_heads[0][0].capitalize()+str(d_n).zfill(3)+hird)
+            lap.append(inv_heads[1][0].capitalize()+str(d_n).zfill(3)+hird)
+            scrn.append(inv_heads[2][0].capitalize()+str(d_n).zfill(3)+hird)
+            dok.append(inv_heads[3][0].capitalize()+str(d_n).zfill(3)+hird)
+            key.append(inv_heads[4][0].capitalize()+str(d_n).zfill(3)+hird)
+            mou.append(inv_heads[5][0].capitalize()+str(d_n).zfill(3)+hird)
+            phn.append(inv_heads[6][0].capitalize()+str(d_n).zfill(3)+hird)
 
-        print(f"{userid}\n{laptop}\n{screen}\n{dockst}")
-        print(f"{keybrd}\n{mouses}\n{phones}\n{hiredt}")
+        print(f"{usr}\n{lap}\n{scrn}\n{dok}")
+        print(f"{key}\n{mou}\n{phn}\n{hir}")
 
 
 make_inv_list()
