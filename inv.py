@@ -15,16 +15,38 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("hw_inventory")
 
 inv_heads = SHEET.worksheet("hardware").row_values(1)
+USERS = 50 # notional number of employees
+inventory = []
 
-for y in range(4, -1, -1):
 
-    rdates = []
-    for d in range(1,10):
-        rand_days = random.randrange(1,365)
-        sdate = datetime(2022, 12, 30) - timedelta((365*(y)+rand_days))
-        rdates.append(sdate.strftime("%d%m%Y"))
-    print(rdates)
 
-    #edate = datetime(2022, 12, 30) - timedelta(365*y)
-    #print(sdate.strftime("%d%m%Y"), edate.strftime("%d%m%Y"))
 
+def make_inv_list():
+
+    for y in range(4, -1, -1):
+
+        userid = []
+        laptop = []
+        screen = []
+        dockst = []
+        keybrd = []
+        mouses = []
+        phones = []
+        hiredt = []
+
+        for d in range(1,1+USERS//5):
+            rand_days = random.randrange(1,365)
+            sdate = datetime(2022, 12, 30) - timedelta((365*(y)+rand_days))
+            #userid.append(inv_heads[d].capitalize() + str(d).zfill(3)+str(int(sdate.strftime("%d%m%Y"))))
+            userid.append(inv_heads[0][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            laptop.append(inv_heads[1][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            screen.append(inv_heads[2][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            dockst.append(inv_heads[3][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            keybrd.append(inv_heads[4][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            mouses.append(inv_heads[5][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            phones.append(inv_heads[6][0].capitalize() + str(d).zfill(3) + str(int(sdate.strftime("%d%m%Y"))))
+            hiredt.append(sdate.strftime("%d%m%Y"))
+        print(f"{userid}\n {laptop}\n {screen}\n {dockst} \n {keybrd}\n {mouses}\n {phones}\n {hiredt}")
+
+
+make_inv_list()
