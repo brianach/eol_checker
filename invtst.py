@@ -19,20 +19,18 @@ HARDWARE.batch_clear(["A2:H60"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
 USERS = 50  # notional number of employees
+inventory = []
 
 
 def make_inv_list():
-    """
+    """+str
     Function to generate inventory of data entered using random ordered dating
     """
 
     for year in range(0, -1, -1):
 
-        userid, laptop, screen, dockst, keybrd, mouses, phones, \
-            hiredt = ([] for l_i in range(8))  # initialize lists for each variable
-        inventory = [userid, laptop, screen, dockst, keybrd, \
-            mouses, phones, hiredt]
-        dthire = []
+        dthire, userid, laptop, screen, dockst, keybrd, mouses, phones, \
+            hiredt = ([] for l_i in range(9))  # initialize lists for each variable
 
         for day in range(1, 1+USERS//5):
             rand_days = random.randrange(1, 365)  # create a random number from the days in a year
@@ -57,12 +55,8 @@ def make_inv_list():
                 keybrd[pos], mouses[pos], phones[pos], hiredt[pos]
             update_inventory(g_row)
             pos += 1
-
-        #print(f"{userid}\n{laptop}\n{screen}\n{dockst}\n{keybrd}\n{mouses}\n{phones}\n{hiredt}")  # test output to console
-        count = 0
-        for count in range(len(inventory)-1):
-            rand_change = random.randrange(1, 3)  # select random 20% of elements from list
-            print(f"Count is : {count} {random.sample(inventory[count], rand_change)}")
+        
+        #print(f"{inv_heads[0]} {userid}\n{inv_heads[1]} {laptop}\n{inv_heads[2]} {screen}\n{inv_heads[3]} {dockst}\n{inv_heads[4]} {keybrd}\n{inv_heads[5]} {mouses}\n{inv_heads[6]} {phones}\n{inv_heads[7]} {hiredt}")  # test output to console
 
 
 def update_inventory(g_row):
