@@ -43,15 +43,10 @@ def make_inv_list():
         pos = 0  # position of item in list
 
         for dat in hiredt:
+            i_list = 0
             g_row = []
-
-            userid.append(inv_heads[0][0].capitalize()+str(pos).zfill(3)+dat)
-            laptop.append(inv_heads[1][0].capitalize()+str(pos).zfill(3)+dat)
-            screen.append(inv_heads[2][0].capitalize()+str(pos).zfill(3)+dat)
-            dockst.append(inv_heads[3][0].capitalize()+str(pos).zfill(3)+dat)
-            keybrd.append(inv_heads[4][0].capitalize()+str(pos).zfill(3)+dat)
-            mouses.append(inv_heads[5][0].capitalize()+str(pos).zfill(3)+dat)
-            phones.append(inv_heads[6][0].capitalize()+str(pos).zfill(3)+dat)
+            for i_list in range(len(inventory)-1):
+                inventory[i_list].append(inv_heads[i_list][0].capitalize()+str(pos).zfill(3)+dat)
         
             g_row = userid[pos], laptop[pos], screen[pos], dockst[pos], \
                 keybrd[pos], mouses[pos], phones[pos], hiredt[pos]
@@ -61,8 +56,11 @@ def make_inv_list():
         #print(f"{userid}\n{laptop}\n{screen}\n{dockst}\n{keybrd}\n{mouses}\n{phones}\n{hiredt}")  # test output to console
         count = 0
         for count in range(len(inventory)-1):
-            rand_change = random.randrange(1, 3)  # select random 20% of elements from list
-            print(f"Count is : {count} {random.sample(inventory[count], rand_change)}")
+            rand_change = random.randrange(1, 4)  # select random number of elements < 4 from list
+            remove_items =  random.sample(inventory[count], rand_change)
+            inventory[count] = [ r for r in inventory[count] if r not in remove_items]
+            print(inventory[count])
+            #print(f"Count is : {count} {random.sample(inventory[count], rand_change)}")
 
 
 def update_inventory(g_row):
