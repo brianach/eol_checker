@@ -47,9 +47,10 @@ def make_inv_list():
             g_row = []
             for i_list in range(len(inventory)-1):
                 inventory[i_list].append(inv_heads[i_list][0].capitalize()+str(pos).zfill(3)+dat)
-        
-            g_row = userid[pos], laptop[pos], screen[pos], dockst[pos], \
-                keybrd[pos], mouses[pos], phones[pos], hiredt[pos]
+                g_row.append(inventory[i_list][pos])
+            g_row.append(dat)
+            #userid[pos], laptop[pos], screen[pos], dockst[pos], \
+            #    keybrd[pos], mouses[pos], phones[pos], hiredt[pos]
             update_inventory(g_row)
             pos += 1
 
