@@ -30,7 +30,7 @@ def make_inv_list():
     """
     Function to generate inventory of data entered using random ordered dating
     """
-    for year in range(0, -1, -1):
+    for year in range(2, -1, -1):
 
         dthire = []
 
@@ -43,12 +43,8 @@ def make_inv_list():
         pos = 0  # position of item in list
         for dat in HIRE:
             i_list = 0
-            #g_row = []
             for i_list in range(len(INVENTORY)-1):
                 INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str(pos).zfill(3)+dat)
-                #g_row.append(INVENTORY[i_list][pos])  # populate the inventory 
-            #g_row.append(dat)  # add the date field
-            #update_inventory(g_row)
             pos += 1
 
         i_list = 0
@@ -59,6 +55,7 @@ def make_inv_list():
                 INV_MEM[i_list].append(remove_items[r])  # add the removal values to a list 
             
         simulate_changes(year)
+
         pos = 0  # position of item in list
         for u in USER:
             g_row = []
@@ -67,6 +64,16 @@ def make_inv_list():
             g_row.append(u[-8:])  # add the date field
             update_inventory(g_row)
             pos += 1
+        update_inventory(g_row)
+
+
+def update_inventory(g_row):
+    """
+    Function to add data to google spreadsheet
+    """
+    inventory_worksheet = SHEET.worksheet("hardware")
+
+    inventory_worksheet.append_row(g_row)
 
 
 def simulate_changes(year):
@@ -96,15 +103,6 @@ def simulate_changes(year):
                     INVENTORY[i_list].append(new_string)
                 comp_string = ""  # reinitialise the string once used
         list_i += 1
-
-
-def update_inventory(g_row):
-    """
-    Function to add data to google spreadsheet
-    """
-    inventory_worksheet = SHEET.worksheet("hardware")
-
-    inventory_worksheet.append_row(g_row)
 
 
 make_inv_list()
