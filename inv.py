@@ -18,7 +18,7 @@ HARDWARE = SHEET.worksheet("hardware")
 HARDWARE.batch_clear(["A2:H60"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
-USERS = 50  # notional number of employees
+USERS = 20  # notional number of employees
 
 USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE = ([] for l_i in range(8))
 INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
@@ -53,7 +53,7 @@ def make_inv_list():
         for i_list in range(len(INVENTORY)-1):
             # this loop generates random items to simulate real world 
             # replacement of employees or hardware based on real world data
-            rand_change = random.randrange(1, 3)  # select random number of items
+            rand_change = random.randrange(1, 3)  # select random number
             remove_items = random.sample(INVENTORY[i_list], rand_change)
             for r in remove_items:
                 # add the removal values to a list for checking against the
