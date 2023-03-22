@@ -26,13 +26,11 @@ INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
 UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM = ([] for l_i in range(8))
 INV_MEM = [UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM]
 
-
 def make_inv_list():
     """
     Function to generate inventory of data using random ordered dating
     """
     id_count = 1
-    c_year = 0
     for year in reversed(range(5)):
 
         # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED YEAR
@@ -56,25 +54,17 @@ def make_inv_list():
             id_count += 1
 
 
-def update_inventory(g_row):
-    """
-    #Function to add data to google spreadsheet
-    """
-    HARDWARE.append_row(g_row)
-
-
 def generate_change_list():
-
     """
     This function generates random selection from the original inventory
     based on industry stats on employee and hardware replacements
     """
     m_list = 0
     for i_list in INVENTORY[:-1]:  
-        for c_year in reversed(range(5, 0, -1)):
+        for year in reversed(range(5, 0, -1)):
             rand_change = random.randrange(1, 3)  # select random number
-            remove_items = random.sample(i_list[(c_year * 10) - 10 \
-                : c_year * 10], rand_change)
+            remove_items = random.sample(i_list[(year * 10) - 10 \
+                : year * 10], rand_change)
 
             for r in remove_items:
                 # add the removal values to a list for checking against the
@@ -92,13 +82,6 @@ def simulate_changes():
     This function takes the generate_change_list() results and removes
     the matching items from the existing lists
     """
-
-    # TEMPORARY CODE TO TEST INVENTORY DATA
-    # -------------------------------------
-    #with open("data.txt", mode = "a") as file:
-    #    for i_list in INVENTORY:
-    #        file.write(f"{i_list}\n")
-
     #for year in reversed(range(5, 0, -1)):
     year = 4
     for id_n, s_list_2 in enumerate(INV_MEM[:-1]):
@@ -117,10 +100,6 @@ def simulate_changes():
                     new_string = item_1[:1]+str(year*10+1).zfill(3)+new_date
                     s_list_1.pop(pos)
                     s_list_1.append(new_string)
-
-    #with open("data.txt", mode = "a") as file:
-    #    for i_list in INVENTORY:
-    #        file.write(f"{i_list}\n")
 
 
 def simulate_eol_replacement(year):
@@ -149,20 +128,25 @@ def generate_new_inventory():
                 g_row.append(INVENTORY[i_list][pos])  # populate the inventory
             g_row.append(u[-8:])  # add the date field
 
-            file.write(f"{g_row}\n")
-            #print(f"This is year {year} and the data is {g_row}")
-            #update_inventory(g_row)
+            file.write(f"{g_row}\n")  # write to file to test output
+
             pos += 1
 
+
+def update_inventory(g_row):
+    """
+    #Function to add data to google spreadsheet
+    """
+    HARDWARE.append_row(g_row)
 
 def main():
     """
     Run all program functions.
     """
     make_inv_list()
-    generate_change_list()
-    simulate_changes()
-    generate_new_inventory()
+    #generate_change_list()
+    #simulate_changes()
+    #generate_new_inventory()
 
 
 main()
