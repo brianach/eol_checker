@@ -34,7 +34,7 @@ def make_inv_list():
     id_count = 1
     c_year = 0
     for year in reversed(range(5)):
-  
+ 
         # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED YEAR
         # ---------------------------------------------------------------
         dthire = []
@@ -50,14 +50,15 @@ def make_inv_list():
         for dat in HIRE:
             i_list = 0
             for i_list in range(len(INVENTORY)-1):
-                INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str(id_count).zfill(3)+dat)
+                INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str \
+                    (id_count).zfill(3)+dat)
             id_count += 1
         c_year+=1
 
         #for i_list in INVENTORY:  # test printing the inventory contents by year
         #    print(i_list[len(i_list) - 10 : len(i_list)])        
 
-    generate_change_list()
+
 
     #for year in reversed(range(4)):
 
@@ -67,27 +68,25 @@ def make_inv_list():
 
         #simulate_eol_replacement(year)  # simulate replacement of aged hardware
 
-        #pos = 0  # position of item in list
-        #for u in USER:
-            #g_row = []
-            #for i_list in range(len(INVENTORY)-1):
-                #g_row.append(INVENTORY[i_list][pos])  # populate the inventory
-            #g_row.append(u[-8:])  # add the date field
-            #print(f"This is year {year} and the data is {g_row}")
-            #update_inventory(g_row)
-            #pos += 1
-
+    pos = 0  # position of item in list
+    for u in USER:
+        g_row = []
+        for i_list in range(len(INVENTORY)-1):
+            g_row.append(INVENTORY[i_list][pos])  # populate the inventory
+        #g_row.append(u[-8:])  # add the date field
+        #print(f"This is year {year} and the data is {g_row}")
         #update_inventory(g_row)
-            #print(f"This is year {year} and the data is {g_row}")
+        pos += 1
+
+    update_inventory(g_row)
+    print(f"This is year {year} and the data is {g_row}")
 
 
 def update_inventory(g_row):
     """
     #Function to add data to google spreadsheet
     """
-    inventory_worksheet = SHEET.worksheet("hardware")
-
-    inventory_worksheet.append_row(g_row)
+    HARDWARE.append_row(g_row)
 
 
 def generate_change_list():
@@ -111,7 +110,7 @@ def generate_change_list():
         m_list += 1
 
     for m_list in INV_MEM[:-1]:  # test printing of the contents to be replaced
-        print(f"The replacements are as follows {m_list}")
+        print(m_list)
 
 
 def simulate_changes():
@@ -163,4 +162,12 @@ def simulate_eol_replacement(year):
             print(f"Year {year} is an odd year")
 
 
-make_inv_list()
+def main():
+    """
+    Run all program functions.
+    """
+    make_inv_list()
+    generate_change_list()
+
+
+main()
