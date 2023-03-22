@@ -12,7 +12,7 @@ SCOPE = [
 CREDS = Credentials.from_service_account_file('credentials.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open("hw_inventory")
+SHEET = GSPREAD_CLIENT.open("ci-project-3")
 HARDWARE = SHEET.worksheet("hardware")
 
 HARDWARE.batch_clear(["A2:H60"])  # clear the worksheet to run simulation
@@ -29,12 +29,12 @@ INV_MEM = [UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM]
 
 def make_inv_list():
     """
-    Function to generate inventory of data entered using random ordered dating
+    Function to generate inventory of data using random ordered dating
     """
     id_count = 1
     c_year = 0
     for year in reversed(range(5)):
- 
+
         # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED YEAR
         # ---------------------------------------------------------------
         dthire = []
@@ -43,6 +43,7 @@ def make_inv_list():
             # generate a random date
             sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
             dthire.append(sdate.strftime("%d%m%Y"))  # add random date
+            # the next line of code rearranges and sorts the dates by ddmmyyy
             HIRE = sorted(dthire, key=lambda hird: (hird[2:4], hird[0:2]))
 
         # SECTION TO GENERATE INITIAL INVENTORY USING THE RANDOM DATES
@@ -50,36 +51,9 @@ def make_inv_list():
         for dat in HIRE:
             i_list = 0
             for i_list in range(len(INVENTORY)-1):
-                INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str \
+                INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str\
                     (id_count).zfill(3)+dat)
             id_count += 1
-        c_year+=1
-
-        #for i_list in INVENTORY:  # test printing the inventory contents by year
-        #    print(i_list[len(i_list) - 10 : len(i_list)])        
-
-
-
-    #for year in reversed(range(4)):
-
- 
-
-        #simulate_changes()  # call the function for the given year
-
-        #simulate_eol_replacement(year)  # simulate replacement of aged hardware
-
-    pos = 0  # position of item in list
-    for u in USER:
-        g_row = []
-        for i_list in range(len(INVENTORY)-1):
-            g_row.append(INVENTORY[i_list][pos])  # populate the inventory
-        #g_row.append(u[-8:])  # add the date field
-        #print(f"This is year {year} and the data is {g_row}")
-        #update_inventory(g_row)
-        pos += 1
-
-    update_inventory(g_row)
-    print(f"This is year {year} and the data is {g_row}")
 
 
 def update_inventory(g_row):
@@ -162,12 +136,29 @@ def simulate_eol_replacement(year):
             print(f"Year {year} is an odd year")
 
 
+def generate_new_inventory():
+    """
+    This takes the updated lists after all the simulated changes
+    and send it to the google sheets updater
+    """
+    pos = 0  # position of item in list
+    for u in USER:
+        g_row = []
+        for i_list in range(len(INVENTORY)-1):
+            g_row.append(INVENTORY[i_list][pos])  # populate the inventory
+        g_row.append(u[-8:])  # add the date field
+        #print(f"This is year {year} and the data is {g_row}")
+        #update_inventory(g_row)
+        pos += 1
+
+
 def main():
     """
     Run all program functions.
     """
     make_inv_list()
     generate_change_list()
+    generate_new_inventory()
 
 
 main()
