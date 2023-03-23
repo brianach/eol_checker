@@ -61,7 +61,7 @@ def make_inv_list(year):
                 i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize \
                     ()+str(id_count + 1).zfill(3)+dat)                   
         id_count += 1
-  
+
 
 def generate_change_list():
     """
@@ -85,9 +85,6 @@ def generate_change_list():
 
     c_year += 1
 
-    #for m_list in INV_MEM[:-1]:  # test printing of the contents to be replaced
-    #    print(m_list)
-
 
 def simulate_changes(year):
     """
@@ -95,7 +92,7 @@ def simulate_changes(year):
     the matching items from the existing lists
     """
     for id_n, s_list_2 in enumerate(INV_MEM[:-1]):
-        #match id_n = []
+
         for i_1, item_2 in enumerate(s_list_2):
             s_list_1 = INVENTORY[id_n]
             for i_2, item_1 in enumerate(s_list_1):
@@ -128,7 +125,7 @@ def simulate_eol_replacement(year):
 def generate_new_inventory():
     """
     This takes the updated lists after all the simulated changes
-    and send it to the google sheets updater
+    and sends it to the google sheets 
     """
     pos = 0  # position of item in list
     with open("data.txt", mode = "a") as file:
@@ -140,16 +137,16 @@ def generate_new_inventory():
 
             pos += 1
             file.write(f"{g_row}\n")
-            print(g_row)  # write to file to test output
-            update_inventory(g_row)
-        #time.sleep(1)
+            #print(g_row)  # write to file to test output
+            #update_inventory(g_row)
 
 
 def update_inventory(g_row):
     """
-    #Function to add data to google spreadsheet
+    Function to write data to google spreadsheet
     """
     HARDWARE.append_row(g_row)
+
 
 def main():
     """
@@ -160,6 +157,6 @@ def main():
         generate_change_list()
         simulate_changes(year)
     generate_new_inventory()
-    print("Hi!")
+
 
 main()
