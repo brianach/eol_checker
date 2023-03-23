@@ -1,5 +1,6 @@
 import gspread
 import random
+import time
 from google.oauth2.service_account import Credentials
 from datetime import timedelta, datetime
 
@@ -34,7 +35,6 @@ def make_inv_list(year):
     """
     Function to generate inventory of data using random ordered dating
     """
-
     global id_count
 
     # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED c_year
@@ -53,13 +53,15 @@ def make_inv_list(year):
     for dat in HIRE:
         for i_list in INVENTORY[:-1]:
             list_len = len(i_list)
-            if list_len >= USERS//5:  # if first year completed
+            if list_len >= USERS//5:  # if 1st yr done increment id from last
                 id_count = int(i_list[-1][1:4])
-                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize()+str(id_count + 1).zfill(3)+dat)
+                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize \
+                    ()+str(id_count + 1).zfill(3)+dat)
             else:
-                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize()+str(id_count + 1).zfill(3)+dat)                    
+                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize \
+                    ()+str(id_count + 1).zfill(3)+dat)                   
         id_count += 1
-   
+  
 
 def generate_change_list():
     """
@@ -74,16 +76,17 @@ def generate_change_list():
 
         # SAMPLE FOR THE CURRENT YEAR ONLY USING THE LIST RANGE METHOD
         # ------------------------------------------------------------
-        remove_items = random.sample(i_list[c_year * USERS//5 : c_year * USERS//5 + USERS//5], rand_change)
-        for r in remove_items:
+        remove_items = random.sample(i_list[c_year * USERS//5 : c_year \
+            * USERS//5 + USERS//5], rand_change)
+        for r_m in remove_items:
             # add the removal values to a list for checking against the
             # associated inventory list eg: LAPT[] : LMEM[]
-            INV_MEM[curr_list].append(r)
+            INV_MEM[curr_list].append(r_m)
 
     c_year += 1
 
-    for m_list in INV_MEM[:-1]:  # test printing of the contents to be replaced
-        print(m_list)
+    #for m_list in INV_MEM[:-1]:  # test printing of the contents to be replaced
+    #    print(m_list)
 
 
 def simulate_changes(year):
@@ -108,8 +111,6 @@ def simulate_changes(year):
                     s_list_1.pop(pos)
                     s_list_1.append(new_string)
 
-    #for i_list in INVENTORY[:-1]:
-    #    print(i_list)
 
 def simulate_eol_replacement(year):
     """
@@ -133,13 +134,15 @@ def generate_new_inventory():
     with open("data.txt", mode = "a") as file:
         for u in USER:
             g_row = []
-            for i_list in range(len(INVENTORY)-1):
-                g_row.append(INVENTORY[i_list][pos])  # populate the inventory
+            for i_list in INVENTORY[:-1]:
+                g_row.append(i_list[pos])  # populate the inventory
             g_row.append(u[-8:])  # add the date field
 
-            file.write(f"{g_row}\n")  # write to file to test output
-
             pos += 1
+            file.write(f"{g_row}\n")
+            print(g_row)  # write to file to test output
+            update_inventory(g_row)
+        #time.sleep(1)
 
 
 def update_inventory(g_row):
@@ -156,7 +159,7 @@ def main():
         make_inv_list(year)
         generate_change_list()
         simulate_changes(year)
-    #generate_new_inventory()
-
+    generate_new_inventory()
+    print("Hi!")
 
 main()
