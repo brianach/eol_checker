@@ -26,64 +26,71 @@ INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
 UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM = ([] for l_i in range(8))
 INV_MEM = [UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM]
 
-def make_inv_list():
+c_year = 0
+id_count = 0
+
+
+def make_inv_list(year):
     """
     Function to generate inventory of data using random ordered dating
     """
-    id_count = 1
-    for year in reversed(range(5)):
 
-        # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED YEAR
-        # ---------------------------------------------------------------
-        dthire = []
-        for day in range(1, 1+USERS//5):
-            rand_days = random.randrange(1, 365)  # create a random number
-            # generate a random date
-            sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
-            dthire.append(sdate.strftime("%d%m%Y"))  # add random date
-            # the next line of code rearranges and sorts the dates by ddmmyyy
-            HIRE = sorted(dthire, key=lambda hird: (hird[2:4], hird[0:2]))
+    global id_count
 
-        # SECTION TO GENERATE INITIAL INVENTORY USING THE RANDOM DATES
-        # ------------------------------------------------------------
-        for dat in HIRE:
-            i_list = 0
-            for i_list in range(len(INVENTORY)-1):
-                INVENTORY[i_list].append(inv_heads[i_list][0].capitalize()+str\
-                    (id_count).zfill(3)+dat)
-            id_count += 1
+    # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED c_year
+    # ---------------------------------------------------------------
+    dthire = []
+    for day in range(1, 1+USERS//5):
+        rand_days = random.randrange(1, 365)  # create a random number
+        # generate a random date
+        sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
+        dthire.append(sdate.strftime("%d%m%Y"))  # add random date
+        # the next line of code rearranges and sorts the dates by ddmmyyy
+        HIRE = sorted(dthire, key=lambda hird: (hird[2:4], hird[0:2]))
 
+    # SECTION TO GENERATE INITIAL INVENTORY USING THE RANDOM DATES
+    # ------------------------------------------------------------
+    for dat in HIRE:
+        for i_list in INVENTORY[:-1]:
+            list_len = len(i_list)
+            if list_len >= USERS//5:  # if first year completed
+                id_count = int(i_list[-1][1:4])
+                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize()+str(id_count + 1).zfill(3)+dat)
+            else:
+                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize()+str(id_count + 1).zfill(3)+dat)                    
+        id_count += 1
+   
 
 def generate_change_list():
     """
     This function generates random selection from the original inventory
     based on industry stats on employee and hardware replacements
     """
-    m_list = 0
-    for i_list in INVENTORY[:-1]:  
-        for year in reversed(range(5, 0, -1)):
-            rand_change = random.randrange(1, 3)  # select random number
-            remove_items = random.sample(i_list[(year * 10) - 10 \
-                : year * 10], rand_change)
+    global c_year
 
-            for r in remove_items:
-                # add the removal values to a list for checking against the
-                # associated inventory list eg: LAPT[] : LMEM[]
-                INV_MEM[m_list].append(r)
+    for i_list in INVENTORY[:-1]:
+        curr_list = INVENTORY.index(i_list)
+        rand_change = random.randrange(1, 3)  # select random number
 
-        m_list += 1
+        # SAMPLE FOR THE CURRENT YEAR ONLY USING THE LIST RANGE METHOD
+        # ------------------------------------------------------------
+        remove_items = random.sample(i_list[c_year * USERS//5 : c_year * USERS//5 + USERS//5], rand_change)
+        for r in remove_items:
+            # add the removal values to a list for checking against the
+            # associated inventory list eg: LAPT[] : LMEM[]
+            INV_MEM[curr_list].append(r)
+
+    c_year += 1
 
     for m_list in INV_MEM[:-1]:  # test printing of the contents to be replaced
         print(m_list)
 
 
-def simulate_changes():
+def simulate_changes(year):
     """
     This function takes the generate_change_list() results and removes
     the matching items from the existing lists
     """
-    #for year in reversed(range(5, 0, -1)):
-    year = 4
     for id_n, s_list_2 in enumerate(INV_MEM[:-1]):
         #match id_n = []
         for i_1, item_2 in enumerate(s_list_2):
@@ -97,10 +104,12 @@ def simulate_changes():
                     rand_days = random.randrange(1, int(year_day))
                     new_date_str = datetime(2022, 12, 30)-timedelta((365*(year)+rand_days))
                     new_date = new_date_str.strftime("%d%m%Y")
-                    new_string = item_1[:1]+str(year*10+1).zfill(3)+new_date
+                    new_string = item_1[:1]+str(len(s_list_1)+1+i_1).zfill(3)+new_date
                     s_list_1.pop(pos)
                     s_list_1.append(new_string)
 
+    #for i_list in INVENTORY[:-1]:
+    #    print(i_list)
 
 def simulate_eol_replacement(year):
     """
@@ -143,9 +152,10 @@ def main():
     """
     Run all program functions.
     """
-    make_inv_list()
-    #generate_change_list()
-    #simulate_changes()
+    for year in reversed(range(5)):
+        make_inv_list(year)
+        generate_change_list()
+        simulate_changes(year)
     #generate_new_inventory()
 
 
