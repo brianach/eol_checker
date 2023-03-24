@@ -37,28 +37,26 @@ def make_inv_list(year):
     """
     global id_count
 
-    # SECTION TO GENERATE RANDOM DATES WITHIN CURRENTLY SELECTED c_year
-    # ---------------------------------------------------------------
-    dthire = []
+    # SECTION TO GENERATE RANDOM DATES WITHIN CURRENT SELECTED YEAR
+    # -------------------------------------------------------------
+    date_hire = []
     for day in range(1, 1+USERS//5):
-        rand_days = random.randrange(1, 365)  # create a random number
-        # generate a random date
+        rand_days = random.randrange(1, 365)
         sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
-        dthire.append(sdate.strftime("%d%m%Y"))  # add random date
-        # the next line of code rearranges and sorts the dates by ddmmyyy
-        HIRE = sorted(dthire, key=lambda hird: (hird[2:4], hird[0:2]))
+        date_hire.append(sdate.strftime("%d%m%Y"))
+        HIRE = sorted(date_hire, key=lambda hird: (hird[2:4], hird[0:2]))
 
-    # SECTION TO GENERATE INITIAL INVENTORY USING THE RANDOM DATES
-    # ------------------------------------------------------------
+    # SECTION TO GENERATE INITIAL INVENTORY USING RANDOM DATES
+    # --------------------------------------------------------
     for dat in HIRE:
-        for i_list in INVENTORY[:-1]:
-            list_len = len(i_list)
-            if list_len >= USERS//5:  # if 1st yr done increment id from last
-                id_count = int(i_list[-1][1:4])
-                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize \
+        for inv_list in INVENTORY[:-1]:
+            list_len = len(inv_list)
+            if list_len >= USERS//5:  # if 1st yr done increment id from last id
+                id_count = int(inv_list[-1][1:4])
+                inv_list.append(inv_heads[INVENTORY.index(inv_list)][0].capitalize \
                     ()+str(id_count + 1).zfill(3)+dat)
             else:
-                i_list.append(inv_heads[INVENTORY.index(i_list)][0].capitalize \
+                inv_list.append(inv_heads[INVENTORY.index(inv_list)][0].capitalize \
                     ()+str(id_count + 1).zfill(3)+dat)                   
         id_count += 1
 
@@ -70,17 +68,15 @@ def generate_change_list():
     """
     global c_year
 
-    for i_list in INVENTORY[:-1]:
-        curr_list = INVENTORY.index(i_list)
+    for inv_list in INVENTORY[:-1]:
+        curr_list = INVENTORY.index(inv_list)
         rand_change = random.randrange(1, 3)  # select random number
 
-        # SAMPLE FOR THE CURRENT YEAR ONLY USING THE LIST RANGE METHOD
-        # ------------------------------------------------------------
-        remove_items = random.sample(i_list[c_year * USERS//5 : c_year \
+        # SAMPLE FOR THE CURRENT YEAR ONLY USING THE LIST RANGE
+        # -----------------------------------------------------
+        remove_items = random.sample(inv_list[c_year * USERS//5 : c_year \
             * USERS//5 + USERS//5], rand_change)
         for r_m in remove_items:
-            # add the removal values to a list for checking against the
-            # associated inventory list eg: LAPT[] : LMEM[]
             INV_MEM[curr_list].append(r_m)
 
     c_year += 1
@@ -88,8 +84,8 @@ def generate_change_list():
 
 def simulate_changes(year):
     """
-    This function takes the generate_change_list() results and removes
-    the matching items from the existing lists
+    This function takes the generate_change_list() results and 
+    removes any matching items in that list from the old lists
     """
     for id_n, s_list_2 in enumerate(INV_MEM[:-1]):
 
@@ -111,15 +107,38 @@ def simulate_changes(year):
 
 def simulate_eol_replacement(year):
     """
-    This function checks the type of hardware against an eol factor as follows:
-    5(years) for screens, 4(y) for laptops & docks, 3(y) for keyboard
-     & mouse and 2(y) for phones starting with the shortest eol factor
+    Each hardware type has an eol value. When this is reached the 
+    hardware is replaced'
     """
-    if year > 0:
-        if year % 2 == 0:
-            print(f"Year {year} is an even year")
-        else:
-            print(f"Year {year} is an odd year")
+    eol_time = int(datetime.now().strftime("%y"))
+    hw_type = []
+    if c_year > 1:
+        if c_year % 2 == 1:
+            hw_type.clear()
+            hw_type.append("phones")
+            hw_purch_yr = eol_time - (year + 3)
+            print(f"replace {hw_type}")
+            #replace_eol_hardware(hw, hw_purch_yr)
+
+        if c_year % 3 == 1:
+            hw_type.clear()
+            hw_type.extend(["laptop", "dockst"])
+            hw_purch_yr = eol_time - (year + 4)
+            print(f"replace {hw_type}")
+
+        if c_year % 4 == 1:
+
+            hw_type.clear()
+            hw_type.extend(["keybrd", "mouses"])
+            hw_purch_yr = eol_time - (year + 5)
+            print(f"replace {hw_type}")
+
+        if c_year % 5 == 0:
+
+            hw_type.clear()
+            hw_type.extend(["screen"])
+            hw_purch_yr = eol_time - (year + 6)
+            print(f"replace {hw_type}")
 
 
 def generate_new_inventory():
@@ -131,14 +150,31 @@ def generate_new_inventory():
     with open("data.txt", mode = "a") as file:
         for u in USER:
             g_row = []
-            for i_list in INVENTORY[:-1]:
-                g_row.append(i_list[pos])  # populate the inventory
+            for inv_list in INVENTORY[:-1]:
+                g_row.append(inv_list[pos])  # populate the inventory
             g_row.append(u[-8:])  # add the date field
 
             pos += 1
             file.write(f"{g_row}\n")
             #print(g_row)  # write to file to test output
             #update_inventory(g_row)
+
+
+def replace_eol_hardware(hw_type, hw_purch_yr):
+    """
+    This function replaces eol hardware
+    """
+
+    for column_head in inv_heads[:-1]:
+        if column_head == hw_type:
+            inv_list = inv_heads.index(column_head)
+    for list_item in INVENTORY[inv_list]:
+        if int(list_item[-2:]) == hw_age:
+            get_hw_date = list_item[-8:]
+            old_date = datetime.strptime(get_hw_date, "%d%m%Y")
+            delta = datetime.today() - old_date
+            if delta.days > c_year * 365:
+                print(f"{list_item} purchased over {c_year} year's ago")
 
 
 def update_inventory(g_row):
@@ -156,7 +192,9 @@ def main():
         make_inv_list(year)
         generate_change_list()
         simulate_changes(year)
+        simulate_eol_replacement(year)
     generate_new_inventory()
+
 
 
 main()
