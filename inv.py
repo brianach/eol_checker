@@ -16,10 +16,10 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("ci-project-3")
 HARDWARE = SHEET.worksheet("hardware")
 
-HARDWARE.batch_clear(["A2:H60"])  # clear the worksheet to run simulation
+HARDWARE.batch_clear(["A2:H120"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
-USERS = 50  # notional number of employees
+USERS = 50  # number of employees
 
 USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE = ([] for l_i in range(8))
 INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
@@ -27,7 +27,7 @@ INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
 UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM = ([] for l_i in range(8))
 INV_MEM = [UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM]
 
-c_year = 0
+curr_year = 0
 id_count = 0
 
 
@@ -66,7 +66,7 @@ def generate_change_list():
     This function generates random selection from the original inventory
     based on industry stats on employee and hardware replacements
     """
-    global c_year
+    global curr_year
 
     for inv_list in INVENTORY[:-1]:
         curr_list = INVENTORY.index(inv_list)
@@ -74,12 +74,12 @@ def generate_change_list():
 
         # SAMPLE FOR THE CURRENT YEAR ONLY USING THE LIST RANGE
         # -----------------------------------------------------
-        remove_items = random.sample(inv_list[c_year * USERS//5 : c_year \
+        remove_items = random.sample(inv_list[curr_year * USERS//5 : curr_year \
             * USERS//5 + USERS//5], rand_change)
         for r_m in remove_items:
             INV_MEM[curr_list].append(r_m)
 
-    c_year += 1
+    curr_year += 1
 
 
 def simulate_changes(year):
@@ -112,33 +112,30 @@ def simulate_eol_replacement(year):
     """
     eol_time = int(datetime.now().strftime("%y"))
     hw_type = []
-    if c_year > 1:
-        if c_year % 2 == 1:
+    if curr_year > 1:
+        if curr_year % 2 == 1:
             hw_type.clear()
             hw_type.append("phones")
             hw_purch_yr = eol_time - (year + 3)
-            print(f"replace {hw_type}")
-            #replace_eol_hardware(hw, hw_purch_yr)
+            replace_eol_hardware(hw_type, hw_purch_yr, year)
 
-        if c_year % 3 == 1:
-            hw_type.clear()
-            hw_type.extend(["laptop", "dockst"])
-            hw_purch_yr = eol_time - (year + 4)
-            print(f"replace {hw_type}")
-
-        if c_year % 4 == 1:
-
+        if curr_year % 3 == 1:
             hw_type.clear()
             hw_type.extend(["keybrd", "mouses"])
+            hw_purch_yr = eol_time - (year + 4)
+            replace_eol_hardware(hw_type, hw_purch_yr, year)
+
+        if curr_year % 4 == 1:
+            hw_type.clear()
+            hw_type.extend(["laptop", "dockst"])
             hw_purch_yr = eol_time - (year + 5)
-            print(f"replace {hw_type}")
-
-        if c_year % 5 == 0:
-
+            replace_eol_hardware(hw_type, hw_purch_yr, year)
+           
+        if curr_year % 5 == 0:
             hw_type.clear()
             hw_type.extend(["screen"])
             hw_purch_yr = eol_time - (year + 6)
-            print(f"replace {hw_type}")
+            replace_eol_hardware(hw_type, hw_purch_yr, year)
 
 
 def generate_new_inventory():
@@ -160,21 +157,25 @@ def generate_new_inventory():
             #update_inventory(g_row)
 
 
-def replace_eol_hardware(hw_type, hw_purch_yr):
+def replace_eol_hardware(hw_type, hw_purch_yr, year):
     """
-    This function replaces eol hardware
+    This function replaces the eol hardware items
     """
+    print(f"replace {hw_type}")
 
-    for column_head in inv_heads[:-1]:
-        if column_head == hw_type:
-            inv_list = inv_heads.index(column_head)
-    for list_item in INVENTORY[inv_list]:
-        if int(list_item[-2:]) == hw_age:
-            get_hw_date = list_item[-8:]
-            old_date = datetime.strptime(get_hw_date, "%d%m%Y")
-            delta = datetime.today() - old_date
-            if delta.days > c_year * 365:
-                print(f"{list_item} purchased over {c_year} year's ago")
+    eol_matches = [hw_item for hw_item in inv_heads if hw_item in hw_type]
+
+    for match in eol_matches:
+        inv_list_index = inv_heads.index(match)
+        hw_list = INVENTORY[inv_list_index]
+        for list_item in hw_list:
+            if int(list_item[-2:]) == hw_purch_yr:
+                get_hw_date = list_item[-8:]
+                old_date = datetime.strptime(get_hw_date, "%d%m%Y")
+                delta = datetime.today() - old_date
+                if delta.days > year * 365:
+                    print(f"{list_item} purchased over {curr_year -1 } year's ago")
+    #print(eol_matches)
 
 
 def update_inventory(g_row):
@@ -194,7 +195,6 @@ def main():
         simulate_changes(year)
         simulate_eol_replacement(year)
     generate_new_inventory()
-
 
 
 main()
