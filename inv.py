@@ -22,11 +22,11 @@ inv_heads = SHEET.worksheet("hardware").row_values(1)
 USERS = 50  # both this and the company age could be done by input but due
             # to google sheets limits i've capped at 50 and 5 years
 
-USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE = ([] for l_i in range(8))
-INVENTORY = [USER, LAPT, SCRN, DOCK, KEYB, MOUS, PHON, HIRE]
+LAPT, SCRN, DOCK, KEYB, MOUS, PHON, DATE = ([] for l_i in range(7))
+INVENTORY = [LAPT, SCRN, DOCK, KEYB, MOUS, PHON, DATE]
 
-UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM = ([] for l_i in range(8))
-INV_MEM = [UMEM, LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, HMEM]
+LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, DMEM = ([] for l_i in range(7))
+INV_MEM = [LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, DMEM]
 
 EOL_VALUE = {
     "screen": 5,
@@ -46,31 +46,32 @@ def generate_dates(year):
     """
     Function to generate inventory of data using random ordered dating
     """
-    date_hire = []
+    date_start = []
     for day in range(1, 1+USERS//5):
         rand_days = random.randrange(1, 365)
         sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
-        date_hire.append(sdate.strftime("%d%m%Y"))
-        hire_date = sorted(date_hire, key=lambda hird: (hird[2:4], hird[0:2]))
-    generate_inventory(hire_date)
+        date_start.append(sdate.strftime("%d%m%Y"))
+        start_date = sorted(date_start, key=lambda start_d: (start_d[2:4], start_d[0:2]))
+    generate_inventory(start_date)
 
 
-def generate_inventory(hire_date):
+def generate_inventory(start_date):
     """
     Function to generate the initial inventory
     """
     global id_count
-    for h_date in hire_date:
+    for s_date in start_date:
         for hw_list in INVENTORY[:-1]:
             list_len = len(hw_list)
             if list_len >= USERS//5:  # if the first year  inventory is initiated
                 id_count = int(hw_list[-1][1:4])   # increment the hw id from last item
                 hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize \
-                    ()+str(id_count + 1).zfill(3)+h_date)
+                    ()+str(id_count + 1).zfill(3)+s_date)
             else:
                 hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize \
-                    ()+str(id_count + 1).zfill(3)+h_date)                   
+                    ()+str(id_count + 1).zfill(3)+s_date)                   
         id_count += 1
+        INVENTORY[len(INVENTORY)-1].append(s_date)
 
 
 def generate_churn_list():
@@ -144,11 +145,11 @@ def generate_new_inventory():
     and sends it to the google sheets 
     """
     pos = 0  # position of item in list
-    for u in USER:
+    for d in DATE:
         g_row = []
         for hw_list in INVENTORY[:-1]:
             g_row.append(hw_list[pos])  # populate the inventory
-        g_row.append(u[-8:])  # add the date field
+        g_row.append(d[-8:])  # add the date field
         pos += 1
         update_inventory(g_row)
 
@@ -169,7 +170,6 @@ def remove_eol_hardware(hw_type, eol_value, year):
             old_date = datetime.strptime(get_hw_date, "%d%m%Y")
             delta = datetime.today() - old_date
             if delta.days > eol_value * 365:
-                print(f"{list_item} purchased over {start_year} year's ago")
                 hw_list.pop(0)
                 replace_eol_hardware(hw_list, eol_value, year)
 
@@ -201,10 +201,10 @@ def main():
     """
     global curr_year
     for year in reversed(range(5)):
-        generate_dates(year)
-        simulate_eol_replacement(year)        
+        generate_dates(year)  
         generate_churn_list()
         simulate_churn(year)
+        simulate_eol_replacement(year)    
         curr_year += 1
     generate_new_inventory()
 
