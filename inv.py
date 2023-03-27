@@ -20,13 +20,13 @@ HARDWARE.batch_clear(["A2:H120"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
 USERS = 50  # both this and the company age could be done by input but due
-            # to google sheets limits i've capped at 50 and 5 years
+YEARS = 5  # to google sheets limits I've capped at 50 and 5 years
 
-LAPT, SCRN, DOCK, KEYB, MOUS, PHON, DATE = ([] for l_i in range(7))
-INVENTORY = [LAPT, SCRN, DOCK, KEYB, MOUS, PHON, DATE]
+SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE = ([] for l_i in range(7))
+INVENTORY = [SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE]
 
-LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, DMEM = ([] for l_i in range(7))
-INV_MEM = [LMEM, SMEM, DMEM, KMEM, MMEM, PMEM, DMEM]
+SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DMEM = ([] for l_i in range(7))
+INV_MEM = [SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DMEM]
 
 EOL_VALUE = {
     "screen": 5,
@@ -47,11 +47,12 @@ def generate_dates(year):
     Function to generate inventory of data using random ordered dating
     """
     date_start = []
-    for day in range(1, 1+USERS//5):
+    for day in range(1, 1 + USERS // YEARS):
         rand_days = random.randrange(1, 365)
         sdate = datetime(2022, 12, 30) - timedelta((365*(year)+rand_days))
         date_start.append(sdate.strftime("%d%m%Y"))
-        start_date = sorted(date_start, key=lambda start_d: (start_d[2:4], start_d[0:2]))
+        start_date = sorted(date_start, key=lambda start_d:
+                            (start_d[2:4], start_d[0:2]))
     generate_inventory(start_date)
 
 
@@ -63,13 +64,13 @@ def generate_inventory(start_date):
     for s_date in start_date:
         for hw_list in INVENTORY[:-1]:
             list_len = len(hw_list)
-            if list_len >= USERS//5:  # if the first year  inventory is initiated
-                id_count = int(hw_list[-1][1:4])   # increment the hw id from last item
-                hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize \
-                    ()+str(id_count + 1).zfill(3)+s_date)
+            if list_len >= USERS // YEARS:  # if year one completed
+                id_count = int(hw_list[-1][1:4])  # increment id from last
+                hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].
+                               capitalize()+str(id_count + 1).zfill(3)+s_date)
             else:
-                hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize \
-                    ()+str(id_count + 1).zfill(3)+s_date)                   
+                hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].
+                               capitalize()+str(id_count + 1).zfill(3)+s_date)
         id_count += 1
         INVENTORY[len(INVENTORY)-1].append(s_date)
 
@@ -86,8 +87,9 @@ def generate_churn_list():
         curr_list_id = INVENTORY.index(hw_list)
         rand_change = random.randrange(1, 3)
 
-        remove_items = random.sample(hw_list[start_year * USERS// \
-            5 : start_year * USERS//5 + USERS//5], rand_change)
+        remove_items = random.sample(hw_list[start_year * USERS //
+                                             YEARS: start_year * USERS // 5 +
+                                             USERS // YEARS], rand_change)
         for r_m in remove_items:
             INV_MEM[curr_list_id].append(r_m)
 
@@ -111,10 +113,12 @@ def simulate_churn(year):
                     del_date = datetime.strptime(comp_string, "%d%m%Y")
 
                     year_day = del_date.strftime("%j")
-                    rand_days = random.randrange(1, int(year_day) + 1 )
-                    new_date_str = datetime(2022, 12, 30)-timedelta((365*(year)+rand_days))
+                    rand_days = random.randrange(1, int(year_day) + 1)
+                    new_date_str = datetime(2022, 12, 30)-timedelta(
+                            (365*(year) + rand_days))
                     new_date = new_date_str.strftime("%d%m%Y")
-                    new_string = item_1[:1]+str(len(s_list_1)+1+index_1).zfill(3)+new_date
+                    new_string = item_1[:1]+str(len(s_list_1) + 1 +
+                                                index_1).zfill(3)+new_date
                     s_list_1.pop(pos)
                     s_list_1.append(new_string)
 
@@ -125,7 +129,6 @@ def simulate_eol_replacement(year):
     hardware should be replaced. This function checks the hardware
     against its eol value and initiates the replacement function
     """
-    #eol_time = int(datetime.now().strftime("%y"))
     hw_type = []
     if start_year > 1:  # eol check (2 years)
 
@@ -142,7 +145,7 @@ def simulate_eol_replacement(year):
 def generate_new_inventory():
     """
     This takes the updated lists after all the simulated changes
-    and sends it to the google sheets 
+    and sends it to the google sheets
     """
     pos = 0  # position of item in list
     for d in DATE:
@@ -158,12 +161,10 @@ def remove_eol_hardware(hw_type, eol_value, year):
     """
     This function replaces the eol hardware items
     """
-    #print(f"replace {hw_type}")
-
     inv_list_index = inv_heads.index(hw_type)
     hw_list = INVENTORY[inv_list_index]
     eol_year = int(hw_list[-1][-2:]) - eol_value
-    for i in range(USERS//5):
+    for i in range(USERS // YEARS):
         list_item = hw_list[0]
         if int(list_item[-2:]) == eol_year:
             get_hw_date = list_item[-8:]
@@ -180,12 +181,12 @@ def replace_eol_hardware(hw_list, eol_value, year):
     """
     rand_days = random.randrange(1, 365)
     eol_time = int(datetime.now().strftime("%y")) - (year+1)
-    new_date_str = datetime(2022, 12, 30)-timedelta((365*(eol_value)+rand_days))
-    new_date = new_date_str.strftime("%d%m%Y")
+    new_d_str = datetime(2022, 12, 30)-timedelta((365*(eol_value)+rand_days))
+    new_date = new_d_str.strftime("%d%m%Y")
     new_date = new_date[:-2] + str(eol_time)
     id_count = int(hw_list[-1][1:4])  # increment the hw id from last item
-    hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize \
-        ()+str(id_count + 1).zfill(3)+new_date)
+    hw_list.append(inv_heads[INVENTORY.index(hw_list)][0].capitalize()
+                   + str(id_count + 1).zfill(3)+new_date)
 
 
 def update_inventory(g_row):
@@ -201,10 +202,10 @@ def main():
     """
     global curr_year
     for year in reversed(range(5)):
-        generate_dates(year)  
+        generate_dates(year)
         generate_churn_list()
         simulate_churn(year)
-        simulate_eol_replacement(year)    
+        simulate_eol_replacement(year)
         curr_year += 1
     generate_new_inventory()
 
