@@ -19,14 +19,14 @@ HARDWARE = SHEET.worksheet("hardware")
 HARDWARE.batch_clear(["A2:H120"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
-USERS = 50  # both this and the company age could be done by input but due
-YEARS = 5  # to google sheets limits I've capped at 50 and 5 years
+USERS = 50  # both USERS and YEARS could be done by user input but
+YEARS = 5  # due to google sheets limits I've capped at 50 and 5 
 
 SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE = ([] for l_i in range(7))
 INVENTORY = [SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE]
 
-SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DMEM = ([] for l_i in range(7))
-INV_MEM = [SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DMEM]
+SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DTMM = ([] for l_i in range(7))
+INV_MEM = [SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DTMM]
 
 EOL_VALUE = {
     "screen": 5,
@@ -207,7 +207,8 @@ def main():
         simulate_churn(year)
         simulate_eol_replacement(year)
         curr_year += 1
-    generate_new_inventory()
+
+    #generate_new_inventory()
 
 
 main()
