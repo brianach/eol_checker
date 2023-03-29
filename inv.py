@@ -363,6 +363,15 @@ def print_footer():
     print(t_line)
 
 
+def get_user_interaction():
+    """
+    This fucntion offers the user the ability to display information
+    and interact with the terminal
+    """
+    print_header()
+    print_footer()
+
+
 def main():
     """
     Run all program functions.
