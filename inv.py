@@ -1,8 +1,9 @@
 """
-Simple program to simulate creation of a hardware inventory with options to
- replace hardware which has reached an EOL (end of life) cycle
+a simple demo to simulate the creation of a company hardware inventory with
+options to replace hardware which has reached an EOL (end of life) cycle
 """
 
+from readchar import readkey, key
 import random
 from datetime import timedelta, datetime
 import gspread
@@ -189,6 +190,7 @@ def generate_new_inventory():
     This takes the updated lists after all the simulated changes
     and sends it to the google sheets
     """
+
     pos = 0  # position of item in list
     for _d in DATE:
         g_row = []
@@ -207,6 +209,7 @@ def update_inventory(g_row):
 
     with open("data.txt", mode="a") as file:
         file.write(f"{g_row}\n")
+    return g_row
 
 
 def get_eol_hardware():
@@ -355,6 +358,8 @@ def print_footer():
     app_v_str = "  CI-PP330  Version 1.0  "
     line_sps = 120 - (len(app_n_str) + len(app_v_str))
 
+    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
     t_line = ''.join('\x1b[1;32;40m' + app_n_str + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
@@ -369,6 +374,26 @@ def get_user_interaction():
     and interact with the terminal
     """
     print_header()
+    for _l in range(20):
+        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+        print(prt)
+    print_footer()
+
+    while True:
+        _k = readkey()
+        if _k == "1":
+            display_inventory()
+        if _k == "2":
+            print("Wahoo too")
+        if _k == "3":
+            break
+
+
+def display_inventory():
+    """"""
+    print_header()
+    for _r in g_row:
+        print(_r)
     print_footer()
 
 
