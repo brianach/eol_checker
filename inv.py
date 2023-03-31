@@ -230,9 +230,20 @@ def get_eol_hardware():
                     then = datetime.strptime(hw_item[-8:], "%d%m%Y")
                     if (datetime.now() - then) >= timedelta(365*eol_value):
                         TOT_EOL += 1
-                        # print(hw_type, hw_item[-8:], "Total EOL", TOT_EOL)
                         INV_EOL[curr_list_id].append(hw_item)
                     break
+    balance_eolhw_inventory()
+
+
+def balance_eolhw_inventory():
+    """
+    If there are any empty items in EOL_INV then this function
+    will fill them with an empty string of 12 characters
+    """
+    max_len = max(len(sublist) for sublist in INV_EOL)
+    for sublist in INV_EOL:
+        while len(sublist) < max_len:
+            sublist.append(' ' * 12)
 
 
 def print_header():
@@ -441,7 +452,7 @@ def get_user_interaction():
         if _k == "1":
             display_inventory()
         if _k == "2":
-            print("Wahoo too")
+            display_eol_hardware()
         if _k == "3":
             break
 
@@ -465,6 +476,9 @@ def inventory_input():
         if _k == key.UP:
             direction -= 20
             display_inventory(direction, inventory_row)
+
+        if _k == "4":
+            display_eol_hardware()
 
         if _k == "5":
             break
@@ -542,6 +556,82 @@ def display_inventory(direction, inventory_row):
     print_footer()
 
 
+def display_eol_hardware():
+    """
+    Display EOL hardware from user interaction
+    """
+    os.system('clear')
+    eol_inventory = []
+    blank_rows = 20 - len(INV_EOL)
+    print_header()
+    print_eolhw_menu()
+
+    for hw_list in range(len(INV_EOL[0])):
+        eol_inventory_row = []
+        for hw_item in range(len(INV_EOL)):
+            eol_inventory_row.append(INV_EOL[hw_item][hw_list])
+        eol_inventory.append(eol_inventory_row)
+    
+    for hw_row in eol_inventory:
+        print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(hw_item)for hw_item in hw_row) + '      ' + '\x1b[0m')
+
+    for i in range(blank_rows):
+        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+        print(prt)
+
+    print_footer()
+
+
+def print_eolhw_menu():
+    """
+    Menu which appears when display inventory is selected
+    """
+    sel_choices_ = "  Use the up and down arrows to navigate inventory  "
+    sel_choice_4 = " 4 : Display EOL Items  "
+    sel_choice_5 = " 5 : Exit Inventory "
+
+    choices_len = len(sel_choices_)
+    rem_chars = int((120 - choices_len) / 2)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt)
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    print(prt, end='')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_4 + '\x1b[0m')
+    print(t_line, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(36))
+    print(prt, end='')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_5 + '\x1b[0m')
+    print(t_line, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    print(prt)
+
+    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+    my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
+    num_items = len(my_list)
+    width = 120
+
+    item_width = int(width / num_items)
+
+    format_str = "{:^" + str(item_width) + "}"
+
+    output_str = "".join([format_str.format(item) for item in my_list])
+    headings = ''.join('\x1b[4;32;40m' + output_str + '\x1b[0m')
+
+    print(headings)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
 def main():
     """
     Run all program functions.
@@ -556,7 +646,8 @@ def main():
     get_eol_hardware()
     generate_new_inventory()
     #get_user_interaction()
-    inventory_input()
+    #inventory_input()
+    display_eol_hardware()
 
 
 main()
