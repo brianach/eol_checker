@@ -246,18 +246,39 @@ def balance_eolhw_inventory():
             sublist.append(' ' * 12)
 
 
+def print_uscore_line():
+    """
+    Refactor print funtions using this function for underscore lines
+    """
+    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+
+def print_blank_line():
+    """
+    Refactor print funtions using this function for blank lines
+    """
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+
 def print_header():
     """
     Print terminal header text to screen
     """
-
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-
     co_title = "ACME  Coders"
     app_name = "HARDWARE INVENTORY"
+
+    usr_object = "User Account......: "
+    usr_locale = "User Context......: "
+    usr_obj_name = " Administrator "
+    usr_loc_name = " Inventory EOL "
+    date_string = "Current Date...: "
+    eoli_string = "Total EOL HW...: "
+
+    print_uscore_line()
+    print_blank_line()
+
     rem_chars = int((120 - (len(co_title) + len(app_name))) / 3)
 
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
@@ -271,17 +292,9 @@ def print_header():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
 
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_uscore_line()
+    print_blank_line()
 
-    usr_object = "User Account......: "
-    usr_locale = "User Context......: "
-    usr_obj_name = " Administrator "
-    usr_loc_name = " Inventory EOL "
-    date_string = "Current Date...: "
-    eoli_string = "Total EOL HW...: "
     current_date = " " + datetime.now().strftime("%x") + " "
     current_eoli = "    " + str(TOT_EOL).zfill(2) + "    "
 
@@ -317,12 +330,9 @@ def print_header():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+5))
     print(prt)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_blank_line()
+    print_uscore_line()
+    print_blank_line()
 
 
 def print_main_menu():
@@ -344,8 +354,9 @@ def print_main_menu():
     print(prt, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+
+    print_blank_line()
+
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
@@ -360,10 +371,9 @@ def print_main_menu():
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
     print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+
+    print_blank_line()
+    print_uscore_line()
 
 
 def print_inventory_menu():
@@ -383,8 +393,8 @@ def print_inventory_menu():
     print(prt, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+
+    print_blank_line()
 
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt, end='')
@@ -397,8 +407,7 @@ def print_inventory_menu():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt)
 
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_uscore_line()
 
     my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
     num_items = len(my_list)
@@ -413,8 +422,7 @@ def print_inventory_menu():
 
     print(headings)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_blank_line()
 
 
 def print_footer():
@@ -425,8 +433,8 @@ def print_footer():
     app_v_str = "  CI-PP330  Version 1.0  "
     rem_chars = 120 - (len(app_n_str) + len(app_v_str))
 
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_uscore_line()
+
     t_line = ''.join('\x1b[1;32;40m' + app_n_str + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
@@ -443,8 +451,7 @@ def get_user_interaction():
     print_header()
     print_main_menu()
     for _l in range(20):
-        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-        print(prt)
+        print_blank_line()
     print_footer()
 
     while True:
@@ -491,8 +498,7 @@ def display_alert(err_str):
     continue_str = "Please press the spacebar to continue."
     rem_chars = int((120 - len(err_str)) / 2)
     for i in range(9):  
-        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-        print(prt)
+        print_blank_line()
     
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
@@ -511,8 +517,7 @@ def display_alert(err_str):
     print(prt)
 
     for i in range(9):  
-        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-        print(prt)
+        print_blank_line()
 
     print_footer()
 
@@ -546,8 +551,7 @@ def display_inventory(direction, inventory_row):
 
         if i > len(inventory_row) - 1:
             for i in range(10):  # there are 10 available lines left on screen
-                prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-                print(prt)
+                print_blank_line()
             direction = 0
             break
         else:
@@ -576,8 +580,7 @@ def display_eol_hardware():
         print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(hw_item)for hw_item in hw_row) + '      ' + '\x1b[0m')
 
     for i in range(blank_rows):
-        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-        print(prt)
+        print_blank_line()
 
     print_footer()
 
@@ -599,8 +602,8 @@ def print_eolhw_menu():
     print(prt, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+
+    print_blank_line()
 
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt, end='')
@@ -613,8 +616,7 @@ def print_eolhw_menu():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt)
 
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_blank_line()
 
     my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
     num_items = len(my_list)
@@ -629,8 +631,8 @@ def print_eolhw_menu():
 
     print(headings)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print_blank_line()
+
 
 def main():
     """
@@ -645,8 +647,8 @@ def main():
         CURR_YR += 1
     get_eol_hardware()
     generate_new_inventory()
-    #get_user_interaction()
-    #inventory_input()
+    get_user_interaction()
+    inventory_input()
     display_eol_hardware()
 
 
