@@ -316,7 +316,7 @@ def print_header():
 
 def print_main_menu():
     """
-    Main menu
+    Display main menu
     """
     sel_choices_ = "Select one of the options presented below by pressing the\
  number indicated"
@@ -386,9 +386,23 @@ def print_inventory_menu():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt)
 
-    #prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    #print(prt)
     prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+    my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
+    num_items = len(my_list)
+    width = 120
+
+    item_width = int(width / num_items)
+
+    format_str = "{:^" + str(item_width) + "}"
+
+    output_str = "".join([format_str.format(item) for item in my_list])
+    headings = ''.join('\x1b[4;32;40m' + output_str + '\x1b[0m')
+
+    print(headings)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
 
 
@@ -445,11 +459,11 @@ def inventory_input():
         _k = readkey()
 
         if _k == key.DOWN:
-            direction += 1
+            direction += 20
             display_inventory(direction, i_row)
 
         if _k == key.UP:
-            direction -= 1
+            direction -= 20
             display_inventory(direction, i_row)
 
         if _k == "3":
@@ -465,7 +479,15 @@ def display_inventory(direction, i_row):
     print_inventory_menu()
 
     for i in range(direction, direction + 20):
-        print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
+        if i > len(i_row) - 1:
+            for i in range(10):  # we know that there are 10 lines left on screen
+                prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+                print(prt)
+            break
+        elif direction < 0:
+            break
+        else:
+            print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
     print_footer()
 
 
