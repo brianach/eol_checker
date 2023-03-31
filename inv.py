@@ -6,7 +6,7 @@ options to replace hardware which has reached an EOL (end of life) cycle
 import os
 from readchar import readkey, key
 import random
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -201,7 +201,7 @@ def generate_new_inventory():
         pos += 1
         update_inventory(g_row)
 
-
+            
 def update_inventory(g_row):
     """
     Function to write data to google spreadsheet
@@ -381,8 +381,8 @@ def print_inventory_menu():
     Menu which appears when display inventory is selected
     """
     sel_choices_ = "  Use the up and down arrows to navigate inventory  "
-    sel_choice_4 = " 1 : Display EOL Items  "
-    sel_choice_5 = " 2 : Exit Inventory "
+    sel_choice_1 = " 1 : Display EOL Items  "
+    sel_choice_2 = " 2 : Exit Inventory "
 
     choices_len = len(sel_choices_)
     rem_chars = int((120 - choices_len) / 2)
@@ -398,11 +398,11 @@ def print_inventory_menu():
 
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_4 + '\x1b[0m')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(36))
     print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_5 + '\x1b[0m')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt)
@@ -443,7 +443,7 @@ def print_footer():
     print(t_line)
 
 
-def get_user_interaction():
+def main_menu_interaction():
     """
     This fucntion offers the user the ability to display information
     and interact with the terminal
@@ -458,14 +458,14 @@ def get_user_interaction():
     while True:
         _k = readkey()
         if _k == "1":
-            inventory_interaction()
+            inventory_menu_interaction()
         if _k == "2":
             display_eol_hardware()
         if _k == "3":
             break
 
 
-def inventory_interaction():
+def inventory_menu_interaction():
     """
     This checks for input from user while in the inventory display screen
     """
@@ -486,17 +486,48 @@ def inventory_interaction():
             display_inventory(direction, inventory_row)
 
         if _k == "1":
-            eol_inventory_interaction()
+            eol_menu_interaction()
 
         if _k == "2":
-            get_user_interaction()
+            main_menu_interaction()
 
 
-def eol_inventory_interaction():
+def eol_menu_interaction():
     """
     This function allows the user to replace the listed EOL hardware
     """
     display_eol_hardware()
+
+    while True:
+        _k = readkey()
+        if _k == "1":
+            user_replace_eol_hw()
+        if _k == "2":
+            main_menu_interaction()
+
+
+def user_replace_eol_hw():
+    """
+    Function for replacement of eol hardware by user
+    """
+
+    for hw_list1, hw_list2 in zip(INV_EOL, INVENTORY[:-1]):
+
+        hw_items = [hw_item for hw_item in hw_list1 if hw_item in hw_list2]
+
+        for i, hw_item in enumerate(hw_list2):
+            ID_COUNT = int(hw_list2[-1][1:4])
+            hw_type = hw_list2[0][0]
+            if hw_item in hw_items:
+                hw_item_idx1 = hw_list1.index(hw_item)
+                hw_item_idx2 = hw_list2.index(hw_item)
+                hw_list1.pop(hw_item_idx1)
+                hw_list2.pop(hw_item_idx2)
+                today_date = date.today().strftime("%d%m%Y")
+                new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
+                hw_list2.append(new_hardware)
+    
+    main_menu_interaction()
 
 
 def display_alert(err_str):
@@ -547,13 +578,13 @@ def display_inventory(direction, inventory_row):
         direction = 0
         err_str = "Already at the top of the inventory "
         display_alert(err_str)
-        inventory_interaction()
+        inventory_menu_interaction()
 
     elif direction > 50:
         direction = 0
         err_str = "You reached the end of the inventory"
         display_alert(err_str)
-        inventory_interaction()
+        inventory_menu_interaction()
 
     for i in range(direction, direction + 20):
 
@@ -602,6 +633,7 @@ def print_eolhw_menu():
     print(prt)
 
     print_blank_line()
+    print_uscore_line()
 
     my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
     num_items = len(my_list)
@@ -621,7 +653,7 @@ def print_eolhw_menu():
 
 def display_eol_hardware():
     """
-    Display EOL hardware from user interaction
+    Display EOL hardware 
     """
     os.system('clear')
     eol_inventory = []
@@ -657,9 +689,7 @@ def main():
         CURR_YR += 1
     get_eol_hardware()
     generate_new_inventory()
-    get_user_interaction()
-    inventory_interaction()
-    display_eol_hardware()
+    main_menu_interaction()
 
 
 main()
