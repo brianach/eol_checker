@@ -17,7 +17,7 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
     ]
 
-CREDS = Credentials.from_service_account_file('creds.json')
+CREDS = Credentials.from_service_account_file('credentials.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("ci-project-3")
@@ -480,11 +480,13 @@ def display_inventory(direction, i_row):
 
     for i in range(direction, direction + 20):
         if i > len(i_row) - 1:
-            for i in range(10):  # we know that there are 10 lines left on screen
+            for i in range(10):  # there are 10 available lines left on screen
                 prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
                 print(prt)
+            direction = 0 
             break
         elif direction < 0:
+            direction = 0
             break
         else:
             print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
