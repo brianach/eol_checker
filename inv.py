@@ -247,17 +247,17 @@ def print_header():
 
     co_title = "ACME  Coders"
     app_name = "HARDWARE INVENTORY"
-    line_sps = int((120 - (len(co_title) + len(app_name))) / 3)
+    rem_chars = int((120 - (len(co_title) + len(app_name))) / 3)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + co_title + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + app_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
 
     prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
@@ -274,36 +274,36 @@ def print_header():
     current_date = " " + datetime.now().strftime("%x") + " "
     current_eoli = "    " + str(TOT_EOL).zfill(2) + "    "
 
-    line_sps = int((120 - (len(usr_object) + len(usr_obj_name)
+    rem_chars = int((120 - (len(usr_object) + len(usr_obj_name)
                     + len(date_string) + len(current_date))) / 3)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps-5))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars-5))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_object + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[0;30;47m' + usr_obj_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps+1))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+1))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + date_string + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[0;30;47m' + current_date + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps+5))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+5))
     print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps-5))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars-5))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_locale + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[0;30;47m' + usr_loc_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps+1))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+1))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + eoli_string + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[0;30;47m' + current_eoli + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps+5))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+5))
     print(prt)
 
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
@@ -325,13 +325,13 @@ def print_main_menu():
     sel_choice_3 = " 3 : Exit EOL Inventory "
 
     choices_len = len(sel_choices_)
-    line_sps = int((120 - choices_len) / 2)
+    rem_chars = int((120 - choices_len) / 2)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
     prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
     print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
@@ -364,13 +364,13 @@ def print_inventory_menu():
     sel_choice_5 = " 5 : Exit Inventory "
 
     choices_len = len(sel_choices_)
-    line_sps = int((120 - choices_len) / 2)
+    rem_chars = int((120 - choices_len) / 2)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
     prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
     print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
@@ -412,13 +412,13 @@ def print_footer():
     """
     app_n_str = "  EOL Inventory Checker  "
     app_v_str = "  CI-PP330  Version 1.0  "
-    line_sps = 120 - (len(app_n_str) + len(app_v_str))
+    rem_chars = 120 - (len(app_n_str) + len(app_v_str))
 
     prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
     t_line = ''.join('\x1b[1;32;40m' + app_n_str + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
     t_line = ''.join('\x1b[1;32;40m' + app_v_str + '\x1b[0m')
     print(t_line)
@@ -450,27 +450,65 @@ def inventory_input():
     """
     This checks for input from user while in the inventory display screen
     """
-    i_row = [list(sublist) for sublist in zip(*INVENTORY[:-1])]
+    inventory_row = [list(sublist) for sublist in zip(*INVENTORY[:-1])]
 
     direction = 0
-    display_inventory(direction, i_row)
+    display_inventory(direction, inventory_row)
 
     while True:
         _k = readkey()
 
         if _k == key.DOWN:
             direction += 20
-            display_inventory(direction, i_row)
+            display_inventory(direction, inventory_row)
 
         if _k == key.UP:
             direction -= 20
-            display_inventory(direction, i_row)
+            display_inventory(direction, inventory_row)
 
-        if _k == "3":
+        if _k == "5":
             break
 
 
-def display_inventory(direction, i_row):
+def display_alert(err_str):
+    """
+    Display and alert message on main screen
+    """
+    continue_str = "Please press the spacebar to continue."
+    rem_chars = int((120 - len(err_str)) / 2)
+    for i in range(9):  
+        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+        print(prt)
+    
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + err_str + '\x1b[0m')
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt)
+
+    rem_chars = int((120 - len(continue_str)) / 2)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + continue_str + '\x1b[0m')
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
+    print(prt)
+
+    for i in range(9):  
+        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+        print(prt)
+
+    print_footer()
+
+    while True:
+        _k = readkey()
+        if _k == key.SPACE:
+            break
+
+
+def display_inventory(direction, inventory_row):
     """
     Display the contents of the hardware inventory 20 rows a time 
     """
@@ -478,18 +516,29 @@ def display_inventory(direction, i_row):
     print_header()
     print_inventory_menu()
 
+    if direction < 0:
+        direction = 0
+        err_str = "Already at the top of the inventory "
+        display_alert(err_str)
+        inventory_input()
+
+    elif direction > 50:
+        direction = 0
+        err_str = "You reached the end of the inventory"
+        display_alert(err_str)
+        inventory_input()
+
     for i in range(direction, direction + 20):
-        if i > len(i_row) - 1:
+
+        if i > len(inventory_row) - 1:
             for i in range(10):  # there are 10 available lines left on screen
                 prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
                 print(prt)
-            direction = 0 
-            break
-        elif direction < 0:
             direction = 0
             break
         else:
-            print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
+            print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in inventory_row[i]) + '      ' + '\x1b[0m')
+
     print_footer()
 
 
