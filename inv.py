@@ -310,9 +310,8 @@ def print_header():
     print(prt)
     prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
-    for i in range(2):
-        prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-        print(prt)
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
 
 
 def print_main_menu():
@@ -387,8 +386,8 @@ def print_inventory_menu():
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
     print(prt)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    #prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    #print(prt)
     prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
     print(prt)
 
@@ -469,28 +468,6 @@ def display_inventory(direction, i_row):
         print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
     print_footer()
 
-    while True:
-        _k = readkey()
-        direction = 0
-        if _k == key.DOWN:
-            direction += 1
-            os.system('clear')
-            print_header()
-            for i in range(direction, direction + 20):
-                print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
-            print_footer()
-
-        if _k == key.UP:
-            direction -= 1
-            os.system('clear')
-            print_header()
-            for i in range(direction, direction + 20):
-                print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
-            print_footer()
-
-        if _k == "3":
-            break
-
 
 def main():
     """
@@ -506,7 +483,7 @@ def main():
     get_eol_hardware()
     generate_new_inventory()
     #get_user_interaction()
-    display_inventory()
+    inventory_input()
 
 
 main()
