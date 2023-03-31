@@ -3,6 +3,7 @@ a simple demo to simulate the creation of a company hardware inventory with
 options to replace hardware which has reached an EOL (end of life) cycle
 """
 
+import os
 from readchar import readkey, key
 import random
 from datetime import timedelta, datetime
@@ -16,7 +17,7 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
     ]
 
-CREDS = Credentials.from_service_account_file('credentials.json')
+CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("ci-project-3")
@@ -313,6 +314,11 @@ def print_header():
         prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
         print(prt)
 
+
+def print_main_menu():
+    """
+    Main menu
+    """
     sel_choices_ = "Select one of the options presented below by pressing the\
  number indicated"
     sel_choice_1 = " 1 : Display Inventory  "
@@ -350,6 +356,43 @@ def print_header():
     print(prt)
 
 
+def print_inventory_menu():
+    """
+    Menu which appears when display inventory is selected
+    """
+    sel_choices_ = "  Use the up and down arrows to navigate inventory  "
+    sel_choice_4 = " 4 : Display EOL Items  "
+    sel_choice_5 = " 5 : Exit Inventory "
+
+    choices_len = len(sel_choices_)
+    line_sps = int((120 - choices_len) / 2)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(line_sps))
+    print(prt)
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    print(prt, end='')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_4 + '\x1b[0m')
+    print(t_line, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(36))
+    print(prt, end='')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_5 + '\x1b[0m')
+    print(t_line, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    print(prt)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
+    print(prt)
+
+
 def print_footer():
     """
     This prints out the bottom lines on the screen
@@ -374,6 +417,7 @@ def get_user_interaction():
     and interact with the terminal
     """
     print_header()
+    print_main_menu()
     for _l in range(20):
         prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
         print(prt)
@@ -389,12 +433,63 @@ def get_user_interaction():
             break
 
 
-def display_inventory():
-    """"""
+def inventory_input():
+    """
+    This checks for input from user while in the inventory display screen
+    """
+    i_row = [list(sublist) for sublist in zip(*INVENTORY[:-1])]
+
+    direction = 0
+    display_inventory(direction, i_row)
+
+    while True:
+        _k = readkey()
+
+        if _k == key.DOWN:
+            direction += 1
+            display_inventory(direction, i_row)
+
+        if _k == key.UP:
+            direction -= 1
+            display_inventory(direction, i_row)
+
+        if _k == "3":
+            break
+
+
+def display_inventory(direction, i_row):
+    """
+    Display the contents of the hardware inventory 20 rows a time 
+    """
+    os.system('clear')
     print_header()
-    for _r in g_row:
-        print(_r)
+    print_inventory_menu()
+
+    for i in range(direction, direction + 20):
+        print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
     print_footer()
+
+    while True:
+        _k = readkey()
+        direction = 0
+        if _k == key.DOWN:
+            direction += 1
+            os.system('clear')
+            print_header()
+            for i in range(direction, direction + 20):
+                print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
+            print_footer()
+
+        if _k == key.UP:
+            direction -= 1
+            os.system('clear')
+            print_header()
+            for i in range(direction, direction + 20):
+                print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(i)for i in i_row[i]) + '      ' + '\x1b[0m')
+            print_footer()
+
+        if _k == "3":
+            break
 
 
 def main():
@@ -410,7 +505,8 @@ def main():
         CURR_YR += 1
     get_eol_hardware()
     generate_new_inventory()
-    get_user_interaction()
+    #get_user_interaction()
+    display_inventory()
 
 
 main()
