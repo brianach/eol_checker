@@ -486,7 +486,7 @@ def inventory_interaction():
             display_inventory(direction, inventory_row)
 
         if _k == "1":
-            display_eol_hardware()
+            eol_inventory_interaction()
 
         if _k == "2":
             get_user_interaction()
@@ -496,8 +496,9 @@ def eol_inventory_interaction():
     """
     This function allows the user to replace the listed EOL hardware
     """
+    display_eol_hardware()
 
-    
+
 def display_alert(err_str):
     """
     Display and alert message on main screen
@@ -571,10 +572,9 @@ def print_eolhw_menu():
     """
     Menu which appears when display inventory is selected
     """
-    sel_choices_ = "  Use the up and down arrows to navigate inventory  "
     sel_choices_ = "   Select from one of the options presented below.  "
-    sel_choice_4 = " 1 : Replace EOL Hardware  "
-    sel_choice_5 = " 2 : Exit Inventory "
+    sel_choice_1 = " 1 : Replace EOL Hardware  "
+    sel_choice_2 = " 2 : Exit EOL Inventory "
 
     choices_len = len(sel_choices_)
     rem_chars = int((120 - choices_len) / 2)
@@ -588,15 +588,17 @@ def print_eolhw_menu():
 
     print_blank_line()
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    rem_chars = int((120 - (len(sel_choice_1) + len(sel_choice_2))) / 3)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_4 + '\x1b[0m')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(36))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_5 + '\x1b[0m')
+    t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars))
     print(prt)
 
     print_blank_line()
