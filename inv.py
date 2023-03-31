@@ -305,13 +305,13 @@ def print_header():
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_object + '\x1b[0m')
     print(t_line, end='')
-    t_line = ''.join('\x1b[0;30;47m' + usr_obj_name + '\x1b[0m')
+    t_line = ''.join('\x1b[3;30;47m' + usr_obj_name + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+1))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + date_string + '\x1b[0m')
     print(t_line, end='')
-    t_line = ''.join('\x1b[0;30;47m' + current_date + '\x1b[0m')
+    t_line = ''.join('\x1b[3;30;47m' + current_date + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+5))
     print(prt)
@@ -319,13 +319,13 @@ def print_header():
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_locale + '\x1b[0m')
     print(t_line, end='')
-    t_line = ''.join('\x1b[0;30;47m' + usr_loc_name + '\x1b[0m')
+    t_line = ''.join('\x1b[3;30;47m' + usr_loc_name + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+1))
     print(prt, end='')
     t_line = ''.join('\x1b[4;32;40m' + eoli_string + '\x1b[0m')
     print(t_line, end='')
-    t_line = ''.join('\x1b[0;30;47m' + current_eoli + '\x1b[0m')
+    t_line = ''.join('\x1b[3;30;47m' + current_eoli + '\x1b[0m')
     print(t_line, end='')
     prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(rem_chars+5))
     print(prt)
@@ -381,8 +381,8 @@ def print_inventory_menu():
     Menu which appears when display inventory is selected
     """
     sel_choices_ = "  Use the up and down arrows to navigate inventory  "
-    sel_choice_4 = " 4 : Display EOL Items  "
-    sel_choice_5 = " 5 : Exit Inventory "
+    sel_choice_4 = " 1 : Display EOL Items  "
+    sel_choice_5 = " 2 : Exit Inventory "
 
     choices_len = len(sel_choices_)
     rem_chars = int((120 - choices_len) / 2)
@@ -448,6 +448,7 @@ def get_user_interaction():
     This fucntion offers the user the ability to display information
     and interact with the terminal
     """
+    os.system('clear')
     print_header()
     print_main_menu()
     for _l in range(20):
@@ -457,14 +458,14 @@ def get_user_interaction():
     while True:
         _k = readkey()
         if _k == "1":
-            display_inventory()
+            inventory_interaction()
         if _k == "2":
             display_eol_hardware()
         if _k == "3":
             break
 
 
-def inventory_input():
+def inventory_interaction():
     """
     This checks for input from user while in the inventory display screen
     """
@@ -484,13 +485,19 @@ def inventory_input():
             direction -= 20
             display_inventory(direction, inventory_row)
 
-        if _k == "4":
+        if _k == "1":
             display_eol_hardware()
 
-        if _k == "5":
-            break
+        if _k == "2":
+            get_user_interaction()
 
 
+def eol_inventory_interaction():
+    """
+    This function allows the user to replace the listed EOL hardware
+    """
+
+    
 def display_alert(err_str):
     """
     Display and alert message on main screen
@@ -539,13 +546,13 @@ def display_inventory(direction, inventory_row):
         direction = 0
         err_str = "Already at the top of the inventory "
         display_alert(err_str)
-        inventory_input()
+        inventory_interaction()
 
     elif direction > 50:
         direction = 0
         err_str = "You reached the end of the inventory"
         display_alert(err_str)
-        inventory_input()
+        inventory_interaction()
 
     for i in range(direction, direction + 20):
 
@@ -560,38 +567,14 @@ def display_inventory(direction, inventory_row):
     print_footer()
 
 
-def display_eol_hardware():
-    """
-    Display EOL hardware from user interaction
-    """
-    os.system('clear')
-    eol_inventory = []
-    blank_rows = 20 - len(INV_EOL)
-    print_header()
-    print_eolhw_menu()
-
-    for hw_list in range(len(INV_EOL[0])):
-        eol_inventory_row = []
-        for hw_item in range(len(INV_EOL)):
-            eol_inventory_row.append(INV_EOL[hw_item][hw_list])
-        eol_inventory.append(eol_inventory_row)
-    
-    for hw_row in eol_inventory:
-        print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(hw_item)for hw_item in hw_row) + '      ' + '\x1b[0m')
-
-    for i in range(blank_rows):
-        print_blank_line()
-
-    print_footer()
-
-
 def print_eolhw_menu():
     """
     Menu which appears when display inventory is selected
     """
     sel_choices_ = "  Use the up and down arrows to navigate inventory  "
-    sel_choice_4 = " 4 : Display EOL Items  "
-    sel_choice_5 = " 5 : Exit Inventory "
+    sel_choices_ = "   Select from one of the options presented below.  "
+    sel_choice_4 = " 1 : Replace EOL Hardware  "
+    sel_choice_5 = " 2 : Exit Inventory "
 
     choices_len = len(sel_choices_)
     rem_chars = int((120 - choices_len) / 2)
@@ -634,6 +617,31 @@ def print_eolhw_menu():
     print_blank_line()
 
 
+def display_eol_hardware():
+    """
+    Display EOL hardware from user interaction
+    """
+    os.system('clear')
+    eol_inventory = []
+    blank_rows = 20 - len(INV_EOL)
+    print_header()
+    print_eolhw_menu()
+
+    for hw_list in range(len(INV_EOL[0])):
+        eol_inventory_row = []
+        for hw_item in range(len(INV_EOL)):
+            eol_inventory_row.append(INV_EOL[hw_item][hw_list])
+        eol_inventory.append(eol_inventory_row)
+    
+    for hw_row in eol_inventory:
+        print('\x1b[1;32;40m' + '      ', '       '.join('\x1b[1;32;40m' + str(hw_item)for hw_item in hw_row) + '      ' + '\x1b[0m')
+
+    for i in range(blank_rows):
+        print_blank_line()
+
+    print_footer()
+
+
 def main():
     """
     Run all program functions.
@@ -648,7 +656,7 @@ def main():
     get_eol_hardware()
     generate_new_inventory()
     get_user_interaction()
-    inventory_input()
+    inventory_interaction()
     display_eol_hardware()
 
 
