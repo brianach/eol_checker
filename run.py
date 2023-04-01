@@ -228,7 +228,7 @@ def update_inventory(g_row):
     """
     Function to write data to google spreadsheet
     """
-    #HARDWARE.append_row(g_row)
+    HARDWARE.append_row(g_row)
 
     return g_row
 

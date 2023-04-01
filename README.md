@@ -29,23 +29,10 @@ Most of the magic in this program happens under the hood as is usually the case 
 
     There isn't much going on here as most of the magic happens in the simulation but there is some code of very minor complexity used to generate the color palette and the layout. Ideally the screen would be made up of separate areas which would be changed independently of the screen header and footer but it was not possible for me to do this here. Due to this the screen is regenerated in its entirety each time the user chooses an option. Luckily due to the processing power of today's computers this doesn't present an issue and if anything serves to mimic the screen refresing abilities of older 20th century hardware. 
 
+## Bugs
 
-## Creating the Heroku app
+* EOL Hardware screen and menu options are problematic but don't prevent the program from running or cause the program to crash. Unforunately it was impossible to troubleshoot using the Gitpod debugger becuase the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints.
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+## Unimplemented Features
 
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
------
-Happy coding!
+* The Exit Inventory opotion on the main screen menu does not do anything. Although it is coded to break out of the loop this doesn't happen. Again it was impossible to troubleshoot using the Gitpod debugger becuase the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints.
