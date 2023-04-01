@@ -228,7 +228,7 @@ def update_inventory(g_row):
     """
     Function to write data to google spreadsheet
     """
-    HARDWARE.append_row(g_row)
+    #HARDWARE.append_row(g_row)
 
     return g_row
 
@@ -527,16 +527,17 @@ def display_alert(err_str):
     """
     Display and alert message on main screen
     """
-    continue_str = "Please press the spacebar to continue"
+    continue_str = "Please press the spacebar to continue "
     spaces = int((78 - len(err_str)) / 2) * ' '
+
     for _i in range(4):
         print_blank_line()
 
-    print('\x1b[1;32;40m' + spaces - ' ' + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + err_str + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    spaces = int((80 - len(continue_str)) / 2) * ' '
+    spaces = int((78 - len(continue_str)) / 2) * ' '
 
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + continue_str + '\x1b[0m', end='')
@@ -622,7 +623,7 @@ def display_eol_hardware():
 
     for i in range(len(INV_EOL[0])):
         if i >= len(INV_EOL):
-            err_str = " There are more EOL items remaining "
+            err_str = " There are no more EOL items remaining "
             display_alert(err_str)
             inventory_menu_interaction()
         eol_row = []
