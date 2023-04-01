@@ -23,20 +23,20 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("ci-project-3")
 HARDWARE = SHEET.worksheet("hardware")
 
-HARDWARE.batch_clear(["A2:H120"])  # clear the worksheet to run simulation
+HARDWARE.batch_clear(["A2:F80"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
 USERS = 50  # both USERS and YEARS could be done by user input but
 YEARS = 5  # due to google sheets limits I've capped at 50 and 5
 
-SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE = ([] for l_i in range(7))
-INVENTORY = [SCRN, LAPT, DOCK, KEYB, MOUS, PHON, DATE]
+SCRN, LAPT, KEYB, MOUS, DATE = ([] for l_i in range(5))
+INVENTORY = [SCRN, LAPT, KEYB, MOUS, DATE]
 
-SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DTMM = ([] for l_i in range(7))
-INV_MEM = [SMEM, LMEM, DMEM, KMEM, MMEM, PMEM, DTMM]
+SMEM, LMEM, KMEM, MMEM, DMEM = ([] for l_i in range(5))
+INV_MEM = [SMEM, LMEM, KMEM, MMEM, DMEM]
 
-SEOL, LEOL, DEOL, KEOL, MEOL, PEOL = ([] for l_i in range(6))
-INV_EOL = [SEOL, LEOL, DEOL, KEOL, MEOL, PEOL]
+SEOL, LEOL, KEOL, MEOL = ([] for l_i in range(4))
+INV_EOL = [SEOL, LEOL, KEOL, MEOL]
 
 EOL_VALUE = {
     "screen": 5,
@@ -60,21 +60,18 @@ def initialize_display():
     """
     print_header()
 
-    sel_choices_ = " Please wait while the hardware inventory loads."
+    sel_choices_ = "Please wait while the hardware inventory loads"
     choices_len = len(sel_choices_)
-    spaces = int((120 - choices_len) / 2)
+    spaces = int((78 - choices_len) / 2) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_blank_line()
     print_uscore_line()
 
-    for _l in range(20):
+    for _l in range(10):
         print_blank_line()
     print_footer()
 
@@ -273,16 +270,14 @@ def print_uscore_line():
     """
     Refactor print funtions using this function for underscore lines
     """
-    prt = ''.join('\x1b[4;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print('\x1b[4;32;40m' + ' ' * 78 + '\x1b[0m')
 
 
 def print_blank_line():
     """
     Refactor print funtions using this function for blank lines
     """
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(120))
-    print(prt)
+    print('\x1b[1;32;40m' + ' ' * 78 + '\x1b[0m')
 
 
 def print_header():
@@ -292,69 +287,58 @@ def print_header():
     co_title = "ACME  Coders"
     app_name = "HARDWARE INVENTORY"
 
-    usr_object = "User Account......: "
-    usr_locale = "User Context......: "
+    usr_object = "User Account...: "
+    usr_locale = "User Context...: "
     usr_obj_name = " Administrator "
     usr_loc_name = " Inventory EOL "
     date_string = "Current Date...: "
     eoli_string = "Total EOL HW...: "
 
-    print_uscore_line()
     print_blank_line()
 
-    spaces = int((120 - (len(co_title) + len(app_name))) / 3)
+    spaces = int((78 - (len(co_title) + len(app_name))) / 3) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + co_title + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + app_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_uscore_line()
     print_blank_line()
 
-    current_date = " " + datetime.now().strftime("%x") + " "
-    current_eoli = "    " + str(TOT_EOL).zfill(2) + "    "
+    current_date = "  " + datetime.now().strftime("%x") + " "
+    current_eoli = "     " + str(TOT_EOL).zfill(2) + "    "
 
-    spaces = int((120 - (len(usr_object) + len(usr_obj_name)
-                         + len(date_string) + len(current_date))) / 3)
+    spaces = int((78 - (len(usr_object) + len(usr_obj_name)
+                        + len(date_string) + len(current_date))) / 3) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces-5))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_object + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[3;30;47m' + usr_obj_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces+1))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + date_string + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[3;30;47m' + current_date + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces+5))
-    print(prt)
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces-5))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
+
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + usr_locale + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[3;30;47m' + usr_loc_name + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces+1))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + eoli_string + '\x1b[0m')
     print(t_line, end='')
     t_line = ''.join('\x1b[3;30;47m' + current_eoli + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces+5))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    print_blank_line()
-    print_uscore_line()
     print_blank_line()
 
 
@@ -362,40 +346,27 @@ def print_main_menu():
     """
     Display main menu
     """
-    sel_choices_ = "Select one of the options presented below by pressing the\
- number indicated"
-    sel_choice_1 = " 1 : Display Inventory  "
-    sel_choice_2 = " 2 : Display EOL Items  "
-    sel_choice_3 = " 3 : Exit EOL Inventory "
+    sel_choices_ = "  Select one of the options presented below by pressing \
+the number indicated  "
+    sel_choice_1 = "1: Show Inventory"
+    sel_choice_2 = "2: Show EOL Items "
+    sel_choice_3 = "3: Exit Inventory"
 
-    choices_len = len(sel_choices_)
-    spaces = int((120 - choices_len) / 2)
+    spaces = int((78 - (len(sel_choice_1) + len(sel_choice_2)
+                        + len(sel_choice_3))) / 4) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
-
-    print_blank_line()
-
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
-    print(prt, end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     t_line = ''.join('\x1b[4;32;40m' + sel_choice_3 + '\x1b[0m')
     print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(12))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    print_blank_line()
     print_uscore_line()
 
 
@@ -403,38 +374,32 @@ def print_inventory_menu():
     """
     Menu which appears when display inventory is selected
     """
-    sel_choices_ = "  Use the up and down arrows to navigate inventory  "
-    sel_choice_1 = " 1 : Display EOL Items  "
-    sel_choice_2 = " 2 : Exit Inventory "
+    sel_choices_ = " Use the up and down arrows to navigate inventory "
+    sel_choice_1 = "1: Show EOL Items "
+    sel_choice_2 = "2: Exit Inventory"
 
     choices_len = len(sel_choices_)
-    spaces = int((120 - choices_len) / 2)
+    spaces = int((80 - choices_len) / 2) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_blank_line()
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
-    print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
-    print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(36))
-    print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
-    print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(20))
-    print(prt)
+    spaces = int((80 - (len(sel_choice_1) + len(sel_choice_2))) / 4) * ' '
+
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_uscore_line()
 
-    my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
+    my_list = ['Screen', 'Laptop', 'Keyboard', 'Mouse']
     num_items = len(my_list)
-    width = 120
+    width = 80
 
     item_width = int(width / num_items)
 
@@ -452,18 +417,15 @@ def print_footer():
     """
     This prints out the bottom lines on the screen
     """
-    app_n_str = "  EOL Inventory Checker  "
-    app_v_str = "  CI-PP330  Version 1.0  "
-    spaces = 120 - (len(app_n_str) + len(app_v_str))
+    app_n_str = "  EOL Inventory Checker "
+    app_v_str = " CI-PP330  Version 1.0  "
+    spaces = 78 - (len(app_n_str) + len(app_v_str)) * ' '
 
     print_uscore_line()
 
-    t_line = ''.join('\x1b[1;32;40m' + app_n_str + '\x1b[0m')
-    print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    t_line = ''.join('\x1b[1;32;40m' + app_v_str + '\x1b[0m')
-    print(t_line)
+    print('\x1b[1;32;40m' + app_n_str + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + app_v_str + '\x1b[0m')
 
 
 def main_menu_interaction():
@@ -474,7 +436,7 @@ def main_menu_interaction():
     os.system('clear')
     print_header()
     print_main_menu()
-    for _l in range(20):
+    for _l in range(10):
         print_blank_line()
     print_footer()
 
@@ -501,11 +463,11 @@ def inventory_menu_interaction():
         _k = readkey()
 
         if _k == key.DOWN:
-            direction += 20
+            direction += 10
             display_inventory(direction, inventory_row)
 
         if _k == key.UP:
-            direction -= 20
+            direction -= 10
             display_inventory(direction, inventory_row)
 
         if _k == "1":
@@ -558,27 +520,21 @@ def display_alert(err_str):
     Display and alert message on main screen
     """
     continue_str = "Please press the spacebar to continue."
-    spaces = int((120 - len(err_str)) / 2)
-    for i in range(9):
+    spaces = int((80 - len(err_str)) / 2) * ' '
+    for _i in range(4):
         print_blank_line()
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + err_str + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + err_str + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    spaces = int((120 - len(continue_str)) / 2)
+    spaces = int((80 - len(continue_str)) / 2)
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + continue_str + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + continue_str + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    for i in range(9):
+    for _i in range(4):
         print_blank_line()
 
     print_footer()
@@ -609,19 +565,13 @@ def display_inventory(direction, inventory_row):
         display_alert(err_str)
         inventory_menu_interaction()
 
-    for i in range(direction, direction + 20):
-
-        if i > len(inventory_row) - 1:
-            for i in range(10):  # there are 10 available lines left on screen
-                print_blank_line()
-            direction = 0
-            break
-        else:
-            sp6 = ' ' * 6
-            sp7 = ' ' * 7
-            print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' +
-                                                  str(i)for i in inventory_row
-                                                  [i]) + sp6 + '\x1b[0m')
+    for i in range(direction, direction + 10):
+        sp6 = ' ' * 6
+        sp7 = ' ' * 7
+        print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' +
+                                              str(i)for i in
+                                              inventory_row[i])
+              + sp6 + '\x1b[0m')
 
     print_footer()
 
@@ -635,36 +585,28 @@ def print_eolhw_menu():
     sel_choice_2 = " 2 : Exit EOL Inventory "
 
     choices_len = len(sel_choices_)
-    spaces = int((120 - choices_len) / 2)
+    spaces = int((80 - choices_len) / 2) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
-    print(prt, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_blank_line()
 
-    spaces = int((120 - (len(sel_choice_1) + len(sel_choice_2))) / 3)
+    spaces = int((80 - (len(sel_choice_1) + len(sel_choice_2))) / 3) * ' '
 
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
-    print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt, end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
-    print(t_line, end='')
-    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
-    print(prt)
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_blank_line()
     print_uscore_line()
 
     my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
     num_items = len(my_list)
-    width = 120
+    width = 80
 
     item_width = int(width / num_items)
 
@@ -684,7 +626,7 @@ def display_eol_hardware():
     """
     os.system('clear')
     eol_inventory = []
-    blank_rows = 20 - len(INV_EOL)
+    blank_rows = 10 - len(INV_EOL)
     print_header()
     print_eolhw_menu()
 
