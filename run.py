@@ -54,6 +54,31 @@ ID_COUNT = 0
 TOT_LINE = 60  # total available lines for the terminal
 
 
+def initialize_display():
+    """
+    Set up display while innventory is simulated
+    """
+    print_header()
+
+    sel_choices_ = " Please wait while the hardware inventory loads."
+    choices_len = len(sel_choices_)
+    spaces = int((120 - choices_len) / 2)
+
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
+    print(prt, end='')
+    prt = ''.join('\x1b[1;32;40m' + ' ' + '\x1b[0m' for i in range(spaces))
+    print(prt)
+
+    print_blank_line()
+    print_uscore_line()
+
+    for _l in range(20):
+        print_blank_line()
+    print_footer()
+
+
 def generate_dates(year):
     """
     Function to generate inventory of data using random ordered dating
@@ -592,10 +617,11 @@ def display_inventory(direction, inventory_row):
             direction = 0
             break
         else:
-            sps = ' ' * 7
-            print('\x1b[1;32;40m' + sps, sps.join('\x1b[1;32;40m' +
+            sp6 = ' ' * 6
+            sp7 = ' ' * 7
+            print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' +
                                                   str(i)for i in inventory_row
-                                                  [i]) + '      ' + '\x1b[0m')
+                                                  [i]) + sp6 + '\x1b[0m')
 
     print_footer()
 
@@ -669,10 +695,11 @@ def display_eol_hardware():
         eol_inventory.append(eol_inventory_row)
 
     for hw_row in eol_inventory:
-        sps = ' ' * 6
-        print('\x1b[1;32;40m' + sps, '       '.join('\x1b[1;32;40m' + str(
+        sp6 = ' ' * 6
+        sp7 = ' ' * 7
+        print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' + str(
                                             hw_item)for hw_item in hw_row)
-              + sps + '\x1b[0m')
+              + sp6 + '\x1b[0m')
 
     for _i in range(blank_rows):
         print_blank_line()
@@ -685,6 +712,7 @@ def main():
     Run all program functions.
     """
     global CURR_YR
+    initialize_display()
     for year in reversed(range(5)):
         generate_dates(year)
         generate_churn_list()
