@@ -221,7 +221,7 @@ def generate_new_inventory():
             g_row.append(hw_list[pos])  # populate the inventory
         g_row.append(_d[-8:])  # add the date field
         pos += 1
-        update_inventory(g_row)
+        #update_inventory(g_row)
 
 
 def update_inventory(g_row):
@@ -453,14 +453,16 @@ def main_menu_interaction():
         if _k == "1":
             inventory_menu_interaction()
         if _k == "2":
-            display_eol_hardware()
+            eol_menu_interaction()
         if _k == "3":
             break
 
 
 def inventory_menu_interaction():
     """
-    This checks for input from user while in the inventory display screen
+    This function loads the inventory into a transposed array in order
+    to correctly display and then checks for input from user while in
+    the inventory display screen context
     """
     inventory_row = [list(sublist) for sublist in zip(*INVENTORY[:-1])]
 
@@ -487,8 +489,10 @@ def inventory_menu_interaction():
 
 def eol_menu_interaction():
     """
-    This function allows the user to replace the listed EOL hardware
+    This function checks for input from user while in
+    the eol inventory display screen context
     """
+
     display_eol_hardware()
 
     while True:
@@ -581,6 +585,36 @@ def display_inventory(direction, inventory_row):
     print_footer()
 
 
+def display_eol_hardware():
+    """
+    This function loads the eol inventory into a transposed array in order
+    to correctly display and then applies changes based on input from the user
+    """
+    os.system('clear')
+    blank_rows = 10 - len(INV_EOL)
+    print_header()
+    print_eolhw_menu()
+
+    eol_inventory = [list(sublist) for sublist in zip(*INV_EOL)]
+    
+    for i, eol_row in enumerate(eol_inventory):
+        if i >= len(eol_row):
+            err_str = " There are more EOL items remaining "
+            display_alert(err_str)
+            inventory_menu_interaction()
+        else:
+            sps = ' ' * 5
+            print('\x1b[1;32;40m' + sps + '  ', sps.join('\x1b[1;32;40m' +
+                                                         str(i) for i in
+                                                         eol_row) + sps +
+                  '  ' + '\x1b[0m')
+
+    for _i in range(blank_rows):
+        print_blank_line()
+
+    print_footer()
+
+
 def print_eolhw_menu():
     """
     Menu which appears when display inventory is selected
@@ -609,44 +643,6 @@ def print_eolhw_menu():
     print_blank_line()
     print_uscore_line()
     print_headings()
-
-
-def display_eol_hardware():
-    """
-    Display EOL hardware
-    """
-    os.system('clear')
-    eol_inventory = []
-    blank_rows = 10 - len(INV_EOL)
-    print_header()
-    print_eolhw_menu()
-
-    for i in range(len(INV_EOL[0])):
-        if i >= len(INV_EOL):
-            err_str = " There are no more EOL items remaining "
-            display_alert(err_str)
-            inventory_menu_interaction()
-        eol_row = []
-        for j in range(len(INV_EOL)):
-            eol_row.append(INV_EOL[j][i])
-        eol_inventory.append(eol_row)
-
-    for i, eol_row in enumerate(eol_inventory):
-        if i >= len(eol_row):
-            err_str = " There are more EOL items remaining "
-            display_alert(err_str)
-            inventory_menu_interaction()
-        else:
-            sps = ' ' * 5
-            print('\x1b[1;32;40m' + sps + '  ', sps.join('\x1b[1;32;40m' +
-                                                         str(i) for i in
-                                                         eol_row) + sps +
-                  '  ' + '\x1b[0m')
-
-    for _i in range(blank_rows):
-        print_blank_line()
-
-    print_footer()
 
 
 def main():

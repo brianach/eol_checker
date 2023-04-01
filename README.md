@@ -31,7 +31,7 @@ Most of the magic in this program happens under the hood as is usually the case 
 
 ## Bugs
 
-* EOL Hardware screen and menu options are problematic but don't prevent the program from running or cause the program to crash. Unforunately it was impossible to troubleshoot using the Gitpod debugger becuase the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints.
+* EOL Hardware screen and menu options are problematic and may cuase the program to exit. Unforunately it was impossible to troubleshoot using the Gitpod debugger because the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints. 
 
 ## Unimplemented Features
 
