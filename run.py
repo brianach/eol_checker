@@ -346,67 +346,75 @@ def print_main_menu():
     """
     Display main menu
     """
-    sel_choices_ = "  Select one of the options presented below by pressing \
-the number indicated  "
+    heading_1 = "  Select one of the options presented below by"
+    heading_2 = " pressing the number indicated  "
+
     sel_choice_1 = "1: Show Inventory"
-    sel_choice_2 = "2: Show EOL Items "
-    sel_choice_3 = "3: Exit Inventory"
+    sel_choice_2 = "2: Show EOL Items"
+    sel_choice_3 = "3: Exit Inventory "
 
     spaces = int((78 - (len(sel_choice_1) + len(sel_choice_2)
                         + len(sel_choice_3))) / 4) * ' '
 
-    print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m')
+    print('\x1b[1;32;40m' + heading_1 + heading_2 + '\x1b[0m')
+
+    print_blank_line()
+
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m')
-    print(t_line, end='')
+    print('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m')
-    print(t_line, end='')
+    print('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
-    t_line = ''.join('\x1b[4;32;40m' + sel_choice_3 + '\x1b[0m')
-    print(t_line, end='')
-    print('\x1b[1;32;40m' + spaces + '\x1b[0m')
+    print('\x1b[4;32;40m' + sel_choice_3 + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces + '  ' + '\x1b[0m')
 
     print_uscore_line()
+    print_blank_line()
 
 
 def print_inventory_menu():
     """
     Menu which appears when display inventory is selected
     """
-    sel_choices_ = " Use the up and down arrows to navigate inventory "
-    sel_choice_1 = "1: Show EOL Items "
-    sel_choice_2 = "2: Exit Inventory"
+    sel_choices_ = " Use the up and down arrows to navigate inventory"
+    sel_choice_1 = "1: Show EOL Items"
+    sel_choice_2 = "2: Exit Inventory "
 
     choices_len = len(sel_choices_)
-    spaces = int((80 - choices_len) / 2) * ' '
+    spaces = int((78 - choices_len) / 2) * ' '
 
-    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + ' ' + spaces + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_blank_line()
 
-    spaces = int((80 - (len(sel_choice_1) + len(sel_choice_2))) / 4) * ' '
+    spaces = int((78 - (len(sel_choice_1) + len(sel_choice_2))) / 3) * ' '
 
-    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + ' ' + spaces + '\x1b[0m', end='')
     print('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
     print_uscore_line()
+    print_headings()
 
+
+def print_headings():
+    """
+    Display the hardware column headings
+    """
     my_list = ['Screen', 'Laptop', 'Keyboard', 'Mouse']
     num_items = len(my_list)
-    width = 80
+    width = 78
 
     item_width = int(width / num_items)
 
     format_str = "{:^" + str(item_width) + "}"
 
     output_str = "".join([format_str.format(item) for item in my_list])
-    headings = ''.join('\x1b[4;32;40m' + output_str + '\x1b[0m')
+    headings = ''.join('\x1b[4;32;40m' + '  ' + output_str + '\x1b[0m')
 
     print(headings)
 
@@ -419,7 +427,7 @@ def print_footer():
     """
     app_n_str = "  EOL Inventory Checker "
     app_v_str = " CI-PP330  Version 1.0  "
-    spaces = 78 - (len(app_n_str) + len(app_v_str)) * ' '
+    spaces = int(78 - (len(app_n_str) + len(app_v_str))) * ' '
 
     print_uscore_line()
 
@@ -430,7 +438,7 @@ def print_footer():
 
 def main_menu_interaction():
     """
-    This fucntion offers the user the ability to display information
+    This function offers the user the ability to display information
     and interact with the terminal
     """
     os.system('clear')
@@ -512,23 +520,23 @@ def user_replace_eol_hw():
                 new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
                 hw_list2.append(new_hardware)
 
-    main_menu_interaction()
+    eol_menu_interaction()
 
 
 def display_alert(err_str):
     """
     Display and alert message on main screen
     """
-    continue_str = "Please press the spacebar to continue."
-    spaces = int((80 - len(err_str)) / 2) * ' '
+    continue_str = "Please press the spacebar to continue"
+    spaces = int((78 - len(err_str)) / 2) * ' '
     for _i in range(4):
         print_blank_line()
 
-    print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
+    print('\x1b[1;32;40m' + spaces - ' ' + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + err_str + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    spaces = int((80 - len(continue_str)) / 2)
+    spaces = int((80 - len(continue_str)) / 2) * ' '
 
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + continue_str + '\x1b[0m', end='')
@@ -547,31 +555,27 @@ def display_alert(err_str):
 
 def display_inventory(direction, inventory_row):
     """
-    Display the contents of the hardware inventory 20 rows a time
+    Display the contents of the hardware inventory 9 rows a time
     """
     os.system('clear')
     print_header()
     print_inventory_menu()
 
-    if direction < 0:
-        direction = 0
-        err_str = "Already at the top of the inventory "
-        display_alert(err_str)
-        inventory_menu_interaction()
-
-    elif direction > 50:
-        direction = 0
-        err_str = "You reached the end of the inventory"
-        display_alert(err_str)
-        inventory_menu_interaction()
-
     for i in range(direction, direction + 10):
-        sp6 = ' ' * 6
-        sp7 = ' ' * 7
-        print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' +
-                                              str(i)for i in
-                                              inventory_row[i])
-              + sp6 + '\x1b[0m')
+        if i < 0:
+            err_str = "Already at the top of the inventory "
+            display_alert(err_str)
+            inventory_menu_interaction()
+        elif i >= len(inventory_row):
+            err_str = "You reached the end of the inventory"
+            display_alert(err_str)
+            inventory_menu_interaction()
+        else:
+            sps = ' ' * 5
+            print('\x1b[1;32;40m' + sps + '  ', sps.join('\x1b[1;32;40m' +
+                                                         str(i)for i in
+                                                         inventory_row[i])
+                  + sps + '  ' + '\x1b[0m')
 
     print_footer()
 
@@ -580,20 +584,20 @@ def print_eolhw_menu():
     """
     Menu which appears when display inventory is selected
     """
-    sel_choices_ = "   Select from one of the options presented below.  "
-    sel_choice_1 = " 1 : Replace EOL Hardware  "
-    sel_choice_2 = " 2 : Exit EOL Inventory "
+    sel_choices_ = "  Select from one of the options presented below  "
+    sel_choice_1 = "1: Replace EOL Hardware"
+    sel_choice_2 = "2: Exit EOL Inventory "
 
     choices_len = len(sel_choices_)
-    spaces = int((80 - choices_len) / 2) * ' '
+    spaces = int((78 - choices_len) / 2) * ' '
 
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + sel_choices_ + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    print_blank_line()
-
     spaces = int((80 - (len(sel_choice_1) + len(sel_choice_2))) / 3) * ' '
+
+    print_blank_line()
 
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
     print('\x1b[4;32;40m' + sel_choice_1 + '\x1b[0m', end='')
@@ -603,21 +607,7 @@ def print_eolhw_menu():
 
     print_blank_line()
     print_uscore_line()
-
-    my_list = ['Screen', 'Laptop', 'Dock Stn', 'Keyboard', 'Mouse', 'Phone']
-    num_items = len(my_list)
-    width = 80
-
-    item_width = int(width / num_items)
-
-    format_str = "{:^" + str(item_width) + "}"
-
-    output_str = "".join([format_str.format(item) for item in my_list])
-    headings = ''.join('\x1b[4;32;40m' + output_str + '\x1b[0m')
-
-    print(headings)
-
-    print_blank_line()
+    print_headings()
 
 
 def display_eol_hardware():
@@ -630,18 +620,27 @@ def display_eol_hardware():
     print_header()
     print_eolhw_menu()
 
-    for hw_list in range(len(INV_EOL[0])):
-        eol_inventory_row = []
-        for hw_item in range(len(INV_EOL)):
-            eol_inventory_row.append(INV_EOL[hw_item][hw_list])
-        eol_inventory.append(eol_inventory_row)
+    for i in range(len(INV_EOL[0])):
+        if i >= len(INV_EOL):
+            err_str = " There are more EOL items remaining "
+            display_alert(err_str)
+            inventory_menu_interaction()
+        eol_row = []
+        for j in range(len(INV_EOL)):
+            eol_row.append(INV_EOL[j][i])
+        eol_inventory.append(eol_row)
 
-    for hw_row in eol_inventory:
-        sp6 = ' ' * 6
-        sp7 = ' ' * 7
-        print('\x1b[1;32;40m' + sp6, sp7.join('\x1b[1;32;40m' + str(
-                                            hw_item)for hw_item in hw_row)
-              + sp6 + '\x1b[0m')
+    for i, eol_row in enumerate(eol_inventory):
+        if i >= len(eol_row):
+            err_str = " There are more EOL items remaining "
+            display_alert(err_str)
+            inventory_menu_interaction()
+        else:
+            sps = ' ' * 5
+            print('\x1b[1;32;40m' + sps + '  ', sps.join('\x1b[1;32;40m' +
+                                                         str(i) for i in
+                                                         eol_row) + sps +
+                  '  ' + '\x1b[0m')
 
     for _i in range(blank_rows):
         print_blank_line()
