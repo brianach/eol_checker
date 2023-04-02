@@ -51,6 +51,18 @@ Pressing the up and down arrows allows the user to navigate the inventory.
 1. Replace EOL Hardware. Pressing 1 will delete a row of data.
 2. Exit EOL Inventory. Pressing 2 will return the user to the main screen.
 
+### Error Checking
+
+- Inventory Screen
+
+    If the user presses the up arrow while already at the top of the inventory, or the down arrow when at the end of the inventory, they will receive a message to that effect and will need to press space to continue.
+
+- EOL Items Screen
+
+    When the user attempts to display EOL Items when there are none, or to remove EOL Items when there are none they should get a message to that effect after which they should press the space button to continue. This is not working and in rare cases the message appears alongside the EOL Items as discussed in the Bugs section.
+
+
+----
 ## User Experience
 
 - User Stories
@@ -66,11 +78,12 @@ Pressing the up and down arrows allows the user to navigate the inventory.
 
 I created a number of flowcharts to help me visualize the program flow and I used Canva for this. The flowcharts changed over time and may not fully follow the final program flow but are shown here to illustrate the course of progress.
 
-![Alt text](media/initial%20flowchart.png)
+![Alt text](media/Initial%20flowchart.png)
 
 ![Alt text](media/generate%20data.png)
 
 ![Alt text](media/replace%20items%20algorithm.png)
+
 
 ---
 # Technologies Used
@@ -98,7 +111,7 @@ I created a number of flowcharts to help me visualize the program flow and I use
 
     ![Alt text](media/scribbles.jpg)
 
-## Bugs
+## Bugs and Issues
 
 * GSPREAD 'code': 429, 'message': "Quota exceeded for quota metric 'Write requests' and limit 'Write requests per minute per user' If you attempt to re-run the program again before at least 1 minute has passed since the last time it ran, the program will fail due to a limit on the write requests to google sheets. 
 
