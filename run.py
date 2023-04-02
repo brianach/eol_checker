@@ -221,7 +221,7 @@ def generate_new_inventory():
             g_row.append(hw_list[pos])  # populate the inventory
         g_row.append(_d[-8:])  # add the date field
         pos += 1
-        #update_inventory(g_row)
+        update_inventory(g_row)
 
 
 def update_inventory(g_row):
@@ -596,7 +596,7 @@ def display_eol_hardware():
     print_eolhw_menu()
 
     eol_inventory = [list(sublist) for sublist in zip(*INV_EOL)]
-    
+
     for i, eol_row in enumerate(eol_inventory):
         if i >= len(eol_row):
             err_str = " There are more EOL items remaining "
