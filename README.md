@@ -239,8 +239,8 @@ Link to GitHub repository [eol-checker](https://github.com/brianach/eol_checker)
 ---
 ## Credits
 
-- Girish on Stack Overflow for instrucitons and example code on ANSI terminal coloring
-    [ANSI Termainl Text Coloring](https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal)
+- Rabin Utam on Stack Overflow for instrucitons and example code on ANSI terminal coloring
+    [ANSI Terminal Text Coloring](https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal)
 
 - [30 Seconds of Code](https://www.30secondsofcode.org/python/s/days-ago/) for demonstration of of TimeDelta and how to work with dates
 
