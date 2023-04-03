@@ -4,11 +4,11 @@
 
 ### Introduction
 
-EOL Checker is a small program which simulates an IT hardware inventory for a 5 year old company of 50 employees. You log in as the administrator and from there you can view and sscroll through the inventory. You have the option to update any hardware that has reached its end of life cycle.
+EOL Checker is a small program which simulates an IT hardware inventory for a 5 year old company of 50 employees. You log in as the administrator and from there you can view and scroll through the inventory. You have the option to update any hardware that has reached its end of life cycle.
 
 ## Detailed Description
 
-Most of the magic in this program happens under the hood as is usually the case and there are three main aspects to the program.
+Most of the magic in this program happens under the hood as is usually the case. There are three main aspects to the program.
 
 - Simulation
 
@@ -73,6 +73,7 @@ Pressing the up and down arrows allows the user to navigate the inventory.
     2. I want to navigate through the inventory
     3. I want to see what hardware is due to be replaced
     4. I want to replace any hardware which is due to be replaced
+    5. I want to verify that EOL hardware was replaced successfully.
 
 ---
 # Flowcharts
@@ -130,7 +131,7 @@ I created a number of flowcharts to help me visualize the program flow and I use
 
     Aditionaly once the EOL items are all replaced the EOL Screen size is displays with the wrong number of rows in the inventory display area.
 
-- Terminal screen issues. I initially set up the screen with a width of 120 characters and a length of 35. This was to allow for 6 hardware types . I modified the code on discovering that the max size was 80 characters by 25 lines. This led to a number of issues and code had to be refactored to allow for the smaller screen size. Reducing the number of hardware types from 6 to 4 was simple enough and didn't affect the simulation in any way as I already had 2 sets of 2 hardware types with equal EOL values so removing 1 of each had no material impact on the siulation. The display area for the inventory was more problematic and had to be altered both to render the inventory but more crucially to correctly detect that the end of the inventory was reached.  Finally, the ansi coloring, while rendering perfectly in Gitpod with excellent contrast and readablity, does not render anywhere near as well on the Heroku terminal unfortunately and time constraints prevented me from adjuting and resolving this. 
+- Terminal screen issues. I initially set up the screen with a width of 120 characters and a length of 35. This was to allow for 6 hardware types . I modified the code on discovering that the max size was 80 characters by 25 lines. This led to a number of issues and code had to be refactored to allow for the smaller screen size. Reducing the number of hardware types from 6 to 4 was simple enough and didn't affect the simulation in any way as I already had 2 sets of 2 hardware types with equal EOL values so removing 1 of each had no material impact on the simulation. The display area for the inventory was more problematic and had to be altered both to render the inventory but more crucially to correctly detect that the end of the inventory was reached.  Finally, the ansi coloring, while rendering perfectly in Gitpod with excellent contrast and readablity, does not render anywhere near as well on the Heroku terminal unfortunately and time constraints prevented me from adjuting and resolving this. 
 
     Gitpod and Heroku contrasted side by side
 
@@ -178,6 +179,11 @@ CI's Python Linter was used to validate the code and all errors and incorrect co
 
     ![EOL empty screen](media/eol-empty.png)
 
+5. I want to verify that EOL hardware was replaced successfully.
+
+    THe user can navigate to the end of the inventory and see that the most recent addtions will have today's date for teh last 8 characters.
+
+    ![Inventory update confirmation](media/replacements.png)
 ---
 
 ## Cloning the eol_checker repository from Git Hub
@@ -192,7 +198,7 @@ You may clone this repository in order to run it from your own Git Hub workspace
 
 ![codespace Button](media/codespace.png)
 
-- Read the requirements.txt which nomally tell you what modules you need to install. As you are cloning a workspace most of these will already be installed. You will need to manually install the following modules using *pip3 install* followed by the module name in your terminal window.
+- Read the requirements.txt which will normally tell you what modules you need to install. As you are cloning a workspace most of these will already be installed. You will need to manually install the following modules using *pip3 install* followed by the module name in your terminal window.
 
     1. readchar
     2. gspread
@@ -202,7 +208,7 @@ You may clone this repository in order to run it from your own Git Hub workspace
 
 ## Deployment on Heroku
 
-Make sue that you requirements.txt file contains all the modules that you need to run your app.
+Make sure that you requirements.txt file contains all the modules that you need to run your app.
 
 1. Go to the Heroku website and create an account by filling the details on the form at this link [Heroku Signup](https://id.heroku.com/login)
 
@@ -210,7 +216,9 @@ Make sue that you requirements.txt file contains all the modules that you need t
 
 3. From the Heroku dashboard, click on the *Create new app* button, give your app a name which has to be unique, select your region and click on the *Create app* button.
 
-4. Next go to *Settings*, look for *Config Vars* and then click on *Reveal Config Vars*. In the *KEY* field type "CREDS" (in capitals). Copy the entire contents onf your *creds.json* file from your Gitpop workspace and paste them into the *VALUE* field. Click the *Add* button. Note: Make sure that your credentials file is named creds.json as otherwise Heroku will not be able to locate it.
+4. Next go to *Settings*, look for *Config Vars* and then click on *Reveal Config Vars*. In the *KEY* field type "CREDS" (in capitals). Copy the entire contents onf your *creds.json* file from your Gitpop workspace and paste them into the *VALUE* field. Click the *Add* button. 
+
+    Note: Make sure that your credentials file is named creds.json as otherwise Heroku will not be able to locate it.
 
 5. Locate the *Buildpacks* section and click on *Add buildback*. Ass both "Python" and "Node.js". Make sure that they are listed in the order "Python" followed by "Node.js".
 
