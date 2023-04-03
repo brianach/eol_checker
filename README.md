@@ -51,7 +51,7 @@ Pressing the up and down arrows allows the user to navigate the inventory.
 1. Replace EOL Hardware. Pressing 1 will delete a row of data.
 2. Exit EOL Inventory. Pressing 2 will return the user to the main screen.
 
-### Error Checking
+### Error Checking and Input Validation
 
 - Inventory Screen
 
@@ -60,6 +60,14 @@ Pressing the up and down arrows allows the user to navigate the inventory.
 - EOL Items Screen
 
     When the user attempts to display EOL Items when there are none, or to remove EOL Items when there are none they should get a message to that effect after which they should press the space button to continue. This is not working and in rare cases the message appears alongside the EOL Items as discussed in the Bugs section.
+
+- Restarting program withing 1 minute
+
+    When the user restarts the program within 1 minute it will like exceed the gspread API quota. A try escept is implement to generate a message informing the user to wait 1 minute before retrying. 
+
+- Input Validation
+
+    I made use of the readchar module for keyboard interaction and as such there is no way for a user to input invalid code. Invalid keypresses are simply ignored by the module.
 
 
 ----
@@ -118,6 +126,8 @@ I created a number of flowcharts to help me visualize the program flow and I use
 ## Bugs and Issues
 
 * GSPREAD 'code': 429, 'message': "Quota exceeded for quota metric 'Write requests' and limit 'Write requests per minute per user' If you attempt to re-run the program again before at least 1 minute has passed since the last time it ran, the program will fail due to a limit on the write requests to google sheets. 
+
+    Update: as of 03042023 this error is now captured in a try except loop which generates an alert message advising the user to wait 1 minute before retrying. 
 
 * EOL Hardware screen and menu options are problematic and may cause the program to exit. Unfortunately it was impossible to troubleshoot using the Gitpod debugger because the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints.
 

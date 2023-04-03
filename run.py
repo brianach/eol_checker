@@ -10,7 +10,6 @@ from readchar import readkey, key
 import gspread
 from google.oauth2.service_account import Credentials
 
-
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -23,7 +22,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("ci-project-3")
 HARDWARE = SHEET.worksheet("hardware")
 
-HARDWARE.batch_clear(["A2:F80"])  # clear the worksheet to run simulation
+HARDWARE.batch_clear(["A2:E51"])  # clear the worksheet to run simulation
 inv_heads = SHEET.worksheet("hardware").row_values(1)
 
 USERS = 50  # both USERS and YEARS could be done by user input but
@@ -71,7 +70,7 @@ def initialize_display():
     print_blank_line()
     print_uscore_line()
 
-    for _l in range(10):
+    for _l in range(13):
         print_blank_line()
     print_footer()
 
@@ -213,7 +212,6 @@ def generate_new_inventory():
     This takes the updated lists after all the simulated changes
     and sends it to the google sheets
     """
-
     pos = 0  # position of item in list
     for _d in DATE:
         g_row = []
@@ -221,7 +219,11 @@ def generate_new_inventory():
             g_row.append(hw_list[pos])  # populate the inventory
         g_row.append(_d[-8:])  # add the date field
         pos += 1
-        update_inventory(g_row)
+        try:
+            update_inventory(g_row)
+        except Exception as _e:
+            err_str = "Google API Error. Please wait 1 minute to retry."
+            display_alert(err_str)
 
 
 def update_inventory(g_row):
@@ -229,7 +231,6 @@ def update_inventory(g_row):
     Function to write data to google spreadsheet
     """
     HARDWARE.append_row(g_row)
-
     return g_row
 
 
@@ -507,22 +508,21 @@ def user_replace_eol_hw():
     """
     Function for replacement of eol hardware by user
     """
-
     for hw_list1, hw_list2 in zip(INV_EOL, INVENTORY[:-1]):
 
         hw_items = [hw_item for hw_item in hw_list1 if hw_item in hw_list2]
 
-        for _i, hw_item in enumerate(hw_list2):
-            ID_COUNT = int(hw_list2[-1][1:4])
-            hw_type = hw_list2[0][0]
-            if hw_item in hw_items:
-                hw_item_idx1 = hw_list1.index(hw_item)
-                hw_item_idx2 = hw_list2.index(hw_item)
-                hw_list1.pop(hw_item_idx1)
-                hw_list2.pop(hw_item_idx2)
-                today_date = date.today().strftime("%d%m%Y")
-                new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
-                hw_list2.append(new_hardware)
+    for _i, hw_item in enumerate(hw_list2):
+        ID_COUNT = int(hw_list2[-1][1:4])
+        hw_type = hw_list2[0][0]
+        if hw_item in hw_items:
+            hw_item_idx1 = hw_list1.index(hw_item)
+            hw_item_idx2 = hw_list2.index(hw_item)
+            hw_list1.pop(hw_item_idx1)
+            hw_list2.pop(hw_item_idx2)
+            today_date = date.today().strftime("%d%m%Y")
+            new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
+            hw_list2.append(new_hardware)
 
     eol_menu_interaction()
 
@@ -531,10 +531,17 @@ def display_alert(err_str):
     """
     Display and alert message on main screen
     """
+    if err_str.startswith("Google"):
+        os.system('clear')
+        print_header()
+        for _i in range(3):
+            print_blank_line()
+        print_uscore_line()
+
     continue_str = "Please press the spacebar to continue "
     spaces = int((78 - len(err_str)) / 2) * ' '
 
-    for _i in range(4):
+    for _i in range(5):
         print_blank_line()
 
     print('\x1b[1;32;40m' + spaces + '\x1b[0m', end='')
