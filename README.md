@@ -129,11 +129,11 @@ I created a number of flowcharts to help me visualize the program flow and I use
 
     Update: as of 03042023 this error is now captured in a try except loop which generates an alert message advising the user to wait 1 minute before retrying. 
 
-* EOL Hardware screen and menu options are problematic and may cause the program to exit. Unfortunately it was impossible to troubleshoot using the Gitpod debugger because the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints.
+* EOL Hardware screen and menu options are problematic and may cause the program to exit. Unfortunately it was impossible to troubleshoot using the Gitpod debugger because the readchar module causes the debugger to crash. This will need to be manually debugged which was not possible at this point due to time constraints. 
 
     Update: as of 02042023 this issue is somewhat resolved. However the key to replace EOL hardware needs to be pressed once for each row of data so this still needs resolution. In some rare cases the warning that there are no more EOL items appears. When this happens the program is directed to an alert or error catching function which waits for a spacebar to be pressed thereby never allowing the EOL hardware replacement option to be triggered. AS the EOL hardware is generated randomly it is difficult to replicate. This happens randomly for some as of yet unknown reason.
 
-    The *no more EOL items remaining* message should be triggered as well if the user attempts to click EOL hardware when there is no more remaining or when the user tries to display EOL hardware when there is no more remaining but this feature is not working correctly. 
+- The *no more EOL items remaining* message should be triggered as well if the     user attempts to click EOL hardware when there is no more remaining or when the user tries to display EOL hardware when there is no more remaining but this feature is not working correctly. 
     
     Screen shot of randomly occuring EOL screen issue.
 

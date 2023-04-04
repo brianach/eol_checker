@@ -222,6 +222,7 @@ def generate_new_inventory():
         try:
             update_inventory(g_row)
         except Exception as _e:
+            print(_e)
             err_str = "Google API Error. Please wait 1 minute to retry."
             display_alert(err_str)
 
@@ -427,7 +428,7 @@ def print_footer():
     This prints out the bottom lines on the screen
     """
     app_n_str = "  EOL Inventory Checker "
-    app_v_str = " CI-PP330  Version 1.0  "
+    app_v_str = " CI-PP3  Version 1.0  "
     spaces = int(78 - (len(app_n_str) + len(app_v_str))) * ' '
 
     print_uscore_line()
@@ -445,7 +446,7 @@ def main_menu_interaction():
     os.system('clear')
     print_header()
     print_main_menu()
-    for _l in range(10):
+    for _l in range(11):
         print_blank_line()
     print_footer()
 
@@ -512,17 +513,17 @@ def user_replace_eol_hw():
 
         hw_items = [hw_item for hw_item in hw_list1 if hw_item in hw_list2]
 
-    for _i, hw_item in enumerate(hw_list2):
-        ID_COUNT = int(hw_list2[-1][1:4])
-        hw_type = hw_list2[0][0]
-        if hw_item in hw_items:
-            hw_item_idx1 = hw_list1.index(hw_item)
-            hw_item_idx2 = hw_list2.index(hw_item)
-            hw_list1.pop(hw_item_idx1)
-            hw_list2.pop(hw_item_idx2)
-            today_date = date.today().strftime("%d%m%Y")
-            new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
-            hw_list2.append(new_hardware)
+        for _i, hw_item in enumerate(hw_list2):
+            ID_COUNT = int(hw_list2[-1][1:4])
+            hw_type = hw_list2[0][0]
+            if hw_item in hw_items:
+                hw_item_idx1 = hw_list1.index(hw_item)
+                hw_item_idx2 = hw_list2.index(hw_item)
+                hw_list1.pop(hw_item_idx1)
+                hw_list2.pop(hw_item_idx2)
+                today_date = date.today().strftime("%d%m%Y")
+                new_hardware = hw_type+str(ID_COUNT + 1).zfill(3)+today_date
+                hw_list2.append(new_hardware)
 
     eol_menu_interaction()
 
@@ -647,7 +648,6 @@ def print_eolhw_menu():
     print('\x1b[4;32;40m' + sel_choice_2 + '\x1b[0m', end='')
     print('\x1b[1;32;40m' + spaces + '\x1b[0m')
 
-    print_blank_line()
     print_uscore_line()
     print_headings()
 
